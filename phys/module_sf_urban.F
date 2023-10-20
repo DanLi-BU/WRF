@@ -91,6 +91,10 @@ use module_wrf_error
    REAL, DIMENSION(1:3)            :: porimp          ! porosity of pavement over impervious surface
    REAL, DIMENSION(1:3)            :: dengimp         ! maximum water-holding depth of pavement
 
+!===danli, 10/12/2023,
+
+   INTEGER                         :: ROOF_TO_CANOPY_AIR_OPTION
+
 !===end hydrological processes===
 
    INTEGER                         :: allocate_status
@@ -591,6 +595,21 @@ use module_wrf_error
    integer,parameter ::  IMPB  = 2
    integer,parameter ::  IMPG  = 3
 
+!---------------- danli 10/12/2023
+   REAL :: DRBDTR,   DRGDTR
+   REAL :: DHBDTR,   DHGDTR
+   REAL :: DELEBDTR, DELEGDTR
+   REAL :: DG0BDTR,  DG0GDTR
+   REAL :: DRRDTB, DHRDTB, DELERDTB, DG0RDTB
+   REAL :: DRRDTG, DHRDTG, DELERDTG, DG0RDTG
+   REAL :: DTCDTR
+   REAL :: DQCDTR
+   REAL :: FZ, GZ, GFR, GXR, GYR, GZR
+
+   INTEGER, PARAMETER :: NNN = 3
+   REAL(8) :: A(NNN,NNN), B(NNN)
+   INTEGER :: INFO, IPIV(NNN)
+   INTEGER :: I, J
 !-------------------------------------------------------------------------------
 ! Set parameters
 !-------------------------------------------------------------------------------
@@ -944,6 +963,7 @@ use module_wrf_error
 
    END IF
 
+IF (ROOF_TO_CANOPY_AIR_OPTION == 0) THEN   ! danli 10/12/2023
 !-------------------------------------------------------------------------------
 ! Roof
 !-------------------------------------------------------------------------------
@@ -1275,7 +1295,7 @@ ENDIF
        ES=6.11*EXP( (2.5*10.**6./461.51)*(TGP-273.15)/(273.15*TGP) )
        DESDT=(2.5*10.**6./461.51)*ES/(TGP**2.)
        QS0G=0.622*ES/(PS-0.378*ES)
-       DQS0GDTG=DESDT*0.22*PS/((PS-0.378*ES)**2.)
+       DQS0GDTG=DESDT*0.622*PS/((PS-0.378*ES)**2.)          ! corrected a bug, danli, 10/12/2023
 
        RG1=EPSG*( RX*VFGS          &
        +EPSB*VFGW*SIG*TBP**4./60.  &
@@ -1350,18 +1370,13 @@ ENDIF
        FY = DRBDTG - DHBDTG - DELEBDTG - DG0BDTG
 
        if(ahoption==3) then             ! danli 09/27/2023
-
-       GF = SG + RG - HG - ELEG - G0G + (AH/RHOO/CPP)*(RHO*CP*100)
-       GX = DRGDTB - DHGDTB - DELEGDTB - DG0GDTB
-       GY = DRGDTG - DHGDTG - DELEGDTG - DG0GDTG
-
+       GF = SG + RG - HG - ELEG - G0G + (AH/RHOO/CPP)*(RHO*CP*100)/RW
        else
-
        GF = SG + RG - HG - ELEG - G0G
+       endif
+
        GX = DRGDTB - DHGDTB - DELEGDTB - DG0GDTB
        GY = DRGDTG - DHGDTG - DELEGDTG - DG0GDTG
-
-       endif
 
        DTB =  (GF*FY-F*GY)/(FX*GY-GX*FY)
        DTG = -(GF+GX*DTB)/GY
@@ -1445,15 +1460,11 @@ ENDIF
        HG=RHO*CP*CHG*UC*(TGP-TCP)*100.
        ELEG=RHO*EL*CHG*UC*BETG*(QS0G-QCP)*100.
 
-        if(ahoption==3) then             ! danli 09/27/2023
-
-        G0G=SG+RG-HG-ELEG + (AH/RHOO/CPP)*(RHO*CP*100)
-
-        else
-
-        G0G=SG+RG-HG-ELEG
-
-        endif
+       if(ahoption==3) then             ! danli 09/27/2023
+       G0G=SG+RG-HG-ELEG + (AH/RHOO/CPP)*(RHO*CP*100)/RW
+       else
+       G0G=SG+RG-HG-ELEG
+       endif
 
        CALL force_restore(CAPB,AKSB,DELT,SB,RB,HB,ELEB,TBLEND,TBP,TB)
        CALL force_restore(CAPG,AKSG,DELT,SG,RG,HG,ELEG,TGLEND,TGP,TG)
@@ -1484,11 +1495,330 @@ ENDIF
 
    END IF
 
-
    FLXTHB=HB/RHO/CP/100.
    FLXHUMB=ELEB/RHO/EL/100.
    FLXTHG=HG/RHO/CP/100.
    FLXHUMG=ELEG/RHO/EL/100.
+
+ELSE    ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023   This implicitly uses CH_SCHEME = 2 and IMP_SCHEME = 1, and does not work with ahoption = 3
+
+
+     T1VC = TCP* (1.0+ 0.61 * QA)
+     TH2V = (TA + ( 0.0098 * ZA)) * (1.0+ 0.61 * QA)
+     RLMO_URB=0.0
+     CALL SFCDIF_URB(ZA,Z0C,T1VC,TH2V,UA,AKANDA_URBAN,CMC_URB,CHC_URB,RLMO_URB,CDC)
+     ALPHAC =  RHO*CP*CHC_URB
+
+
+     ALPHAB=RHO*CP*(6.15+4.18*UC)/1200.
+     IF(UC > 5.) ALPHAB=RHO*CP*(7.51*UC**0.78)/1200.
+
+     ALPHAG=ALPHAB
+     ALPHAR=ALPHAB
+
+
+
+   CHC=ALPHAC/RHO/CP/UA
+   CHB=ALPHAB/RHO/CP/UC
+   CHG=ALPHAG/RHO/CP/UC
+   CHR=ALPHAR/RHO/CP/UC
+
+
+   BETB=0.0
+   IF(RAIN > 1.) BETG=0.7
+   IF(RAIN > 1.) BETR=0.7
+
+
+!-------------------------------------------------------------------------------
+!  TB, TG, TR  Solving Non-Linear Simultaneous Equation by Newton-Rapson
+!  TBL,TGL, TRL Solving Heat Equation by Tri Diagonal Matrix Algorithm
+!-------------------------------------------------------------------------------
+
+   IF (TS_SCHEME == 1) THEN
+
+
+ !-------------------------------------------------------------------------------
+!  TB, TG  Solving Non-Linear Simultaneous Equation by Newton-Rapson
+!  TBL,TGL Solving Heat Equation by Tri Diagonal Matrix Algorithm
+!-------------------------------------------------------------------------------
+
+!    TBP=350.
+!    TGP=350.
+
+     DO ITERATION=1,20
+
+       ES=6.11*EXP( (2.5*10.**6./461.51)*(TBP-273.15)/(273.15*TBP) )
+       DESDT=(2.5*10.**6./461.51)*ES/(TBP**2.)
+       QS0B=0.622*ES/(PS-0.378*ES)
+       DQS0BDTB=DESDT*0.622*PS/((PS-0.378*ES)**2.)
+
+       ES=6.11*EXP( (2.5*10.**6./461.51)*(TGP-273.15)/(273.15*TGP) )
+       DESDT=(2.5*10.**6./461.51)*ES/(TGP**2.)
+       QS0G=0.622*ES/(PS-0.378*ES)
+       DQS0GDTG=DESDT*0.622*PS/((PS-0.378*ES)**2.)          ! corrected a bug, danli, 10/12/2023
+
+       RG1=EPSG*( RX*VFGS          &
+       +EPSB*VFGW*SIG*TBP**4./60.  &
+       -SIG*TGP**4./60. )
+
+       RB1=EPSB*( RX*VFWS         &
+       +EPSG*VFWG*SIG*TGP**4./60. &
+       +EPSB*VFWW*SIG*TBP**4./60. &
+       -SIG*TBP**4./60. )
+
+       RG2=EPSG*( (1.-EPSB)*(1.-SVF)*VFWS*RX                  &
+       +(1.-EPSB)*(1.-SVF)*VFWG*EPSG*SIG*TGP**4./60.          &
+       +EPSB*(1.-EPSB)*(1.-SVF)*(1.-2.*VFWS)*SIG*TBP**4./60. )
+
+       RB2=EPSB*( (1.-EPSG)*VFWG*VFGS*RX                          &
+       +(1.-EPSG)*EPSB*VFGW*VFWG*SIG*(TBP**4.)/60.                &
+       +(1.-EPSB)*VFWS*(1.-2.*VFWS)*RX                            &
+       +(1.-EPSB)*VFWG*(1.-2.*VFWS)*EPSG*SIG*EPSG*TGP**4./60.     &
+       +EPSB*(1.-EPSB)*(1.-2.*VFWS)*(1.-2.*VFWS)*SIG*TBP**4./60. )
+
+       RG=RG1+RG2
+       RB=RB1+RB2
+
+       DRBDTB1=EPSB*(4.*EPSB*SIG*TB**3.*VFWW-4.*SIG*TB**3.)/60.
+       DRBDTG1=EPSB*(4.*EPSG*SIG*TG**3.*VFWG)/60.
+       DRBDTB2=EPSB*(4.*(1.-EPSG)*EPSB*SIG*TB**3.*VFGW*VFWG &
+               +4.*EPSB*(1.-EPSB)*SIG*TB**3.*VFWW*VFWW)/60.
+       DRBDTG2=EPSB*(4.*(1.-EPSB)*EPSG*SIG*TG**3.*VFWG*VFWW)/60.
+
+       DRGDTB1=EPSG*(4.*EPSB*SIG*TB**3.*VFGW)/60.
+       DRGDTG1=EPSG*(-4.*SIG*TG**3.)/60.
+       DRGDTB2=EPSG*(4.*EPSB*(1.-EPSB)*SIG*TB**3.*VFWW*VFGW)/60.
+       DRGDTG2=EPSG*(4.*(1.-EPSB)*EPSG*SIG*TG**3.*VFWG*VFGW)/60.
+
+       DRBDTB=DRBDTB1+DRBDTB2
+       DRBDTG=DRBDTG1+DRBDTG2
+       DRGDTB=DRGDTB1+DRGDTB2
+       DRGDTG=DRGDTG1+DRGDTG2
+
+       HB=RHO*CP*CHB*UC*(TBP-TCP)*100.
+       HG=RHO*CP*CHG*UC*(TGP-TCP)*100.
+
+       DTCDTB=W*ALPHAB/(RW*ALPHAC+RW*ALPHAG+W*ALPHAB)
+       DTCDTG=RW*ALPHAG/(RW*ALPHAC+RW*ALPHAG+W*ALPHAB)
+
+       DHBDTB=RHO*CP*CHB*UC*(1.-DTCDTB)*100.
+       DHBDTG=RHO*CP*CHB*UC*(0.-DTCDTG)*100.
+       DHGDTG=RHO*CP*CHG*UC*(1.-DTCDTG)*100.
+       DHGDTB=RHO*CP*CHG*UC*(0.-DTCDTB)*100.
+
+       ELEB=RHO*EL*CHB*UC*BETB*(QS0B-QCP)*100.
+       ELEG=RHO*EL*CHG*UC*BETG*(QS0G-QCP)*100.
+
+       DQCDTB=W*ALPHAB*BETB*DQS0BDTB/(RW*ALPHAC+RW*ALPHAG*BETG+W*ALPHAB*BETB)
+       DQCDTG=RW*ALPHAG*BETG*DQS0GDTG/(RW*ALPHAC+RW*ALPHAG*BETG+W*ALPHAB*BETB)
+
+       DELEBDTB=RHO*EL*CHB*UC*BETB*(DQS0BDTB-DQCDTB)*100.
+       DELEBDTG=RHO*EL*CHB*UC*BETB*(0.-DQCDTG)*100.
+       DELEGDTG=RHO*EL*CHG*UC*BETG*(DQS0GDTG-DQCDTG)*100.
+       DELEGDTB=RHO*EL*CHG*UC*BETG*(0.-DQCDTB)*100.
+
+       G0B=AKSB*(TBP-TBL(1))/(DZB(1)/2.)
+       G0G=AKSG*(TGP-TGL(1))/(DZG(1)/2.)
+
+       DG0BDTB=2.*AKSB/DZB(1)
+       DG0BDTG=0.
+       DG0GDTG=2.*AKSG/DZG(1)
+       DG0GDTB=0.
+
+       F = SB + RB - HB - ELEB - G0B
+       FX = DRBDTB - DHBDTB - DELEBDTB - DG0BDTB
+       FY = DRBDTG - DHBDTG - DELEBDTG - DG0BDTG
+
+       if(ahoption==3) then             ! danli 09/27/2023
+       GF = SG + RG - HG - ELEG - G0G   + (AH/RHOO/CPP)*(RHO*CP*100)/RW
+       else
+       GF = SG + RG - HG - ELEG - G0G
+       endif
+
+       GX = DRGDTB - DHGDTB - DELEGDTB - DG0GDTB
+       GY = DRGDTG - DHGDTG - DELEGDTG - DG0GDTG
+
+       DTB =  (GF*FY-F*GY)/(FX*GY-GX*FY)
+       DTG = -(GF+GX*DTB)/GY
+
+       TB = TBP + DTB
+       TG = TGP + DTG
+
+       TBP = TB
+       TGP = TG
+
+       if(ahoption==2) then             ! danli 09/27/2023
+
+       TC1=R*ALPHAR+RW*ALPHAG+W*ALPHAB+ALPHAC
+       TC2=R*ALPHAR*TRP+RW*ALPHAG*TGP+W*ALPHAB*TBP+ ALPHAC*TA + (AH/RHOO/CPP)*(RHO*CP)
+       TC=TC2/TC1
+
+       else
+
+       TC1=R*ALPHAR+RW*ALPHAG+W*ALPHAB+ALPHAC
+       TC2=R*ALPHAR*TRP+RW*ALPHAG*TGP+W*ALPHAB*TBP+ ALPHAC*TA
+       TC=TC2/TC1
+
+       endif
+
+       QC1=R*ALPHAR+RW*ALPHAG*BETG+W*ALPHAB*BETB+ALPHAC
+       QC2=R*ALPHAR*BETR*QS0R+RW*ALPHAG*BETG*QS0G+W*ALPHAB*BETB*QS0B +ALPHAC*QA
+       QC=QC2/QC1
+
+       DTC=TCP - TC
+       TCP=TC
+       QCP=QC
+
+       IF( ABS(F) < 0.000001 .AND. ABS(DTB) < 0.000001 &
+        .AND. ABS(GF) < 0.000001 .AND. ABS(DTG) < 0.000001 &
+        .AND. ABS(DTC) < 0.000001) EXIT
+
+     END DO
+
+     CALL multi_layer(num_wall_layers,BOUNDB,G0B,CAPB,AKSB,TBL,DZB,DELT,TBLEND)
+
+     CALL multi_layer(num_road_layers,BOUNDG,G0G,CAPG,AKSG,TGL,DZG,DELT,TGLEND)
+
+
+     DO ITERATION=1,20
+
+       ES=6.11*EXP( (2.5*10.**6./461.51)*(TRP-273.15)/(273.15*TRP) )
+       DESDT=(2.5*10.**6./461.51)*ES/(TRP**2.)
+       QS0R=0.622*ES/(PS-0.378*ES)
+       DQS0RDTR = DESDT*0.622*PS/((PS-0.378*ES)**2.)
+
+       RR=EPSR*(RX-SIG*(TRP**4.)/60.)
+       HR=RHO*CP*CHR*UC*(TRP-TC)*100.
+       ELER=RHO*EL*CHR*UC*BETR*(QS0R-QC)*100.
+       G0R=AKSR*(TRP-TRL(1))/(DZR(1)/2.)
+
+       F = SR + RR - HR - ELER - G0R
+
+       DRRDTR = (-4.*EPSR*SIG*TRP**3.)/60.
+       DHRDTR = RHO*CP*CHR*UA*100.
+       DELERDTR = RHO*EL*CHR*UA*BETR*DQS0RDTR*100.
+       DG0RDTR =  2.*AKSR/DZR(1)
+
+       DFDT = DRRDTR - DHRDTR - DELERDTR - DG0RDTR
+       DTR = F/DFDT
+
+       TR = TRP - DTR
+       TRP = TR
+
+       IF( ABS(F) < 0.000001 .AND. ABS(DTR) < 0.000001 ) EXIT
+
+     END DO
+
+
+     CALL multi_layer(num_roof_layers,BOUNDR,G0R,CAPR,AKSR,TRL,DZR,DELT,TRLEND)
+
+
+    ELSE
+
+!-------------------------------------------------------------------------------
+!  TB, TG  by Force-Restore Method
+!-------------------------------------------------------------------------------
+
+       ES=6.11*EXP((2.5*10.**6./461.51)*(TBP-273.15)/(273.15*TBP) )
+       QS0B=0.622*ES/(PS-0.378*ES)
+
+       ES=6.11*EXP((2.5*10.**6./461.51)*(TGP-273.15)/(273.15*TGP) )
+       QS0G=0.622*ES/(PS-0.378*ES)
+
+
+       RG1=EPSG*( RX*VFGS             &
+       +EPSB*VFGW*SIG*TBP**4./60.     &
+       -SIG*TGP**4./60. )
+
+       RB1=EPSB*( RX*VFWS &
+       +EPSG*VFWG*SIG*TGP**4./60. &
+       +EPSB*VFWW*SIG*TBP**4./60. &
+       -SIG*TBP**4./60. )
+
+       RG2=EPSG*( (1.-EPSB)*(1.-SVF)*VFWS*RX                   &
+       +(1.-EPSB)*(1.-SVF)*VFWG*EPSG*SIG*TGP**4./60.           &
+       +EPSB*(1.-EPSB)*(1.-SVF)*(1.-2.*VFWS)*SIG*TBP**4./60. )
+
+       RB2=EPSB*( (1.-EPSG)*VFWG*VFGS*RX                          &
+       +(1.-EPSG)*EPSB*VFGW*VFWG*SIG*(TBP**4.)/60.                &
+       +(1.-EPSB)*VFWS*(1.-2.*VFWS)*RX                            &
+       +(1.-EPSB)*VFWG*(1.-2.*VFWS)*EPSG*SIG*EPSG*TGP**4./60.     &
+       +EPSB*(1.-EPSB)*(1.-2.*VFWS)*(1.-2.*VFWS)*SIG*TBP**4./60. )
+
+       RG=RG1+RG2
+       RB=RB1+RB2
+
+       HB=RHO*CP*CHB*UC*(TBP-TCP)*100.
+       ELEB=RHO*EL*CHB*UC*BETB*(QS0B-QCP)*100.
+       G0B=SB+RB-HB-ELEB
+
+       HG=RHO*CP*CHG*UC*(TGP-TCP)*100.
+       ELEG=RHO*EL*CHG*UC*BETG*(QS0G-QCP)*100.
+
+       if(ahoption==3) then             ! danli 09/27/2023
+       G0G=SG+RG-HG-ELEG + (AH/RHOO/CPP)*(RHO*CP*100)/RW
+       else
+       G0G=SG+RG-HG-ELEG
+       endif
+
+
+       ES=6.11*EXP( (2.5*10.**6./461.51)*(TRP-273.15)/(273.15*TRP) )
+       QS0R=0.622*ES/(PS-0.378*ES)
+
+       RR=EPSR*(RX-SIG*(TRP**4.)/60.)
+       HR=RHO*CP*CHR*UC*(TRP-TCP)*100.
+       ELER=RHO*EL*CHR*UC*BETR*(QS0R-QCP)*100.
+       G0R=SR+RR-HR-ELER
+
+       CALL force_restore(CAPR,AKSR,DELT,SR,RR,HR,ELER,TRLEND,TRP,TR)
+       CALL force_restore(CAPB,AKSB,DELT,SB,RB,HB,ELEB,TBLEND,TBP,TB)
+       CALL force_restore(CAPG,AKSG,DELT,SG,RG,HG,ELEG,TGLEND,TGP,TG)
+
+       TRP=TR
+       TBP=TB
+       TGP=TG
+
+
+       if(ahoption==2) then             ! danli 09/27/2023
+
+       TC1=R*ALPHAR+RW*ALPHAG+W*ALPHAB+ALPHAC
+       TC2=R*ALPHAR*TRP+RW*ALPHAG*TGP+W*ALPHAB*TBP+ ALPHAC*TA + (AH/RHOO/CPP)*(RHO*CP)
+       TC=TC2/TC1
+
+       else
+
+       TC1=R*ALPHAR+RW*ALPHAG+W*ALPHAB+ALPHAC
+       TC2=R*ALPHAR*TRP+RW*ALPHAG*TGP+W*ALPHAB*TBP+ ALPHAC*TA
+       TC=TC2/TC1
+
+       endif
+
+
+       QC1=R*ALPHAR+RW*ALPHAG*BETG+W*ALPHAB*BETB+ALPHAC
+       QC2=R*ALPHAR*BETR*QS0R+RW*ALPHAG*BETG*QS0G+W*ALPHAB*BETB*QS0B +ALPHAC*QA
+       QC=QC2/QC1
+
+
+       TCP=TC
+       QCP=QC
+
+   END IF
+
+
+
+   FLXTHR=HR/RHO/CP/100.
+   FLXHUMR=ELER/RHO/EL/100.
+   FLXTHB=HB/RHO/CP/100.
+   FLXHUMB=ELEB/RHO/EL/100.
+   FLXTHG=HG/RHO/CP/100.
+   FLXHUMG=ELEG/RHO/EL/100.
+
+
+
+
+ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
+
+
 
 !-------------------------------------------------------------------------------
 ! Total Fluxes from Urban Canopy
@@ -2276,6 +2606,8 @@ ENDIF
          read(string(indx+1:),*) ch_scheme_data
       else if (name == "TS_SCHEME") then
          read(string(indx+1:),*) ts_scheme_data
+      else if (name == "ROOF_TO_CANOPY_AIR_OPTION") then
+         read(string(indx+1:),*) roof_to_canopy_air_option
       else if (name == "AHOPTION") then
          read(string(indx+1:),*) ahoption
       else if (name == "AHDIUPRF") then
