@@ -1,5 +1,9 @@
 ### WRF-ARW Modeling System  ###
 
+This is a new branch from WRF_AH, but for studying effects of heat mitigation like albedo changes
+
+### WRF-ARW Modeling System  ###
+
 This is a forked version of WRF from NCAR
 (below is the official statement)
 
