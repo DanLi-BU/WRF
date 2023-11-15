@@ -784,6 +784,11 @@ use module_wrf_error
 
  !End NUDAPT Modification
 
+ if(stdh_urb.lt.0.0)THEN  ! danli 11/15/2023, utilizing the pre-defined variable "stdh_urb" for other purposes, in this case as a scaling parameter for roof albedo
+
+ ALBR = ALBR * abs(stdh_urb）
+
+ endif ! end of utilizing the pre-defined variable "stdh_urb" for other purposes 
 
 ! Miao, 2007/01/17, cal. ah
    if(ahoption==1) AH=AH*ahdiuprf(tloc)
@@ -2968,7 +2973,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
             IF( IVGTYP(I,J) == ISURBAN)  THEN
                UTYPE_URB2D(I,J) = 2  ! for default. high-intensity
                UTYPE_URB = UTYPE_URB2D(I,J)  ! for default. high-intensity
-               IF (HGT_URB2D(I,J)>0.) THEN
+               IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0) THEN
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
@@ -3003,7 +3008,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
             IF( IVGTYP(I,J) == LOW_DENSITY_RESIDENTIAL) THEN
                UTYPE_URB2D(I,J) = 1  ! low-intensity residential
                UTYPE_URB = UTYPE_URB2D(I,J)  ! low-intensity residential
-               IF (HGT_URB2D(I,J)>0.) THEN
+               IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0) THEN
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
@@ -3038,7 +3043,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
            IF( IVGTYP(I,J) == HIGH_DENSITY_RESIDENTIAL) THEN
                UTYPE_URB2D(I,J) = 2  ! high-intensity
                UTYPE_URB = UTYPE_URB2D(I,J)  ! high-intensity
-              IF (HGT_URB2D(I,J)>0.) THEN
+              IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0 ) THEN
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
@@ -3073,7 +3078,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
             IF( IVGTYP(I,J) == HIGH_INTENSITY_INDUSTRIAL) THEN
                UTYPE_URB2D(I,J) = 3  !  Commercial/Industrial/Transportation
                UTYPE_URB = UTYPE_URB2D(I,J)  !  Commercial/Industrial/Transportation
-              IF (HGT_URB2D(I,J)>0.) THEN
+              IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0 ) THEN
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
