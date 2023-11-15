@@ -784,9 +784,9 @@ use module_wrf_error
 
  !End NUDAPT Modification
 
- if(stdh_urb.lt.0.0)THEN  ! danli 11/15/2023, utilizing the pre-defined variable "stdh_urb" for other purposes, in this case as a scaling parameter for roof albedo
+ if(stdh_urb.lt.0.0) THEN  ! danli 11/15/2023, utilizing the pre-defined variable "stdh_urb" for other purposes, in this case as a scaling parameter for roof albedo
 
- ALBR = ALBR * abs(stdh_urb）
+ ALBR = ALBR * (stdh_urb) * (-1.0)
 
  endif ! end of utilizing the pre-defined variable "stdh_urb" for other purposes 
 
