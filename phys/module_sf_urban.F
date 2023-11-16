@@ -785,9 +785,9 @@ use module_wrf_error
  !End NUDAPT Modification
 
  if(stdh_urb .lt. 0.0) THEN  ! danli 11/15/2023, utilizing the pre-defined variable "stdh_urb" for other purposes, in this case as a scaling parameter for roof albedo
-
  ALBR = ALBR * (stdh_urb) * (-1.0)
-
+ WRITE(mesg,*) 'ADJUSTING ALBR TO BE', ALBR
+ WRITE_MESSAGE(mesg)  
  endif ! end of utilizing the pre-defined variable "stdh_urb" for other purposes 
 
 ! Miao, 2007/01/17, cal. ah
@@ -2974,6 +2974,10 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                UTYPE_URB2D(I,J) = 2  ! for default. high-intensity
                UTYPE_URB = UTYPE_URB2D(I,J)  ! for default. high-intensity
                IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0.) THEN
+                  WRITE(mesg,*) 'USING NUDAPT URBAN MORPHOLOGY'
+                  WRITE_MESSAGE(mesg)
+                  WRITE(mesg,*) 'STDH_URB2D',STDH_URB2D(I,J)
+                  WRITE_MESSAGE(mesg)                  
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
@@ -3011,6 +3015,10 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                UTYPE_URB2D(I,J) = 1  ! low-intensity residential
                UTYPE_URB = UTYPE_URB2D(I,J)  ! low-intensity residential
                IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0. ) THEN
+                  WRITE(mesg,*) 'USING NUDAPT URBAN MORPHOLOGY'
+                  WRITE_MESSAGE(mesg)
+                  WRITE(mesg,*) 'STDH_URB2D',STDH_URB2D(I,J)
+                  WRITE_MESSAGE(mesg)                  
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
@@ -3048,6 +3056,10 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                UTYPE_URB2D(I,J) = 2  ! high-intensity
                UTYPE_URB = UTYPE_URB2D(I,J)  ! high-intensity
               IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0. ) THEN
+                  WRITE(mesg,*) 'USING NUDAPT URBAN MORPHOLOGY'
+                  WRITE_MESSAGE(mesg)
+                  WRITE(mesg,*) 'STDH_URB2D',STDH_URB2D(I,J)
+                  WRITE_MESSAGE(mesg)                  
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
@@ -3085,6 +3097,10 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                UTYPE_URB2D(I,J) = 3  !  Commercial/Industrial/Transportation
                UTYPE_URB = UTYPE_URB2D(I,J)  !  Commercial/Industrial/Transportation
               IF (HGT_URB2D(I,J)>0. .or. STDH_URB2D(I,J)<0. ) THEN
+                  WRITE(mesg,*) 'USING NUDAPT URBAN MORPHOLOGY'
+                  WRITE_MESSAGE(mesg)
+                  WRITE(mesg,*) 'STDH_URB2D',STDH_URB2D(I,J)
+                  WRITE_MESSAGE(mesg)                  
                   CONTINUE
                ELSE
                   WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
