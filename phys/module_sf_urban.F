@@ -2809,6 +2809,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                              SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D,           & ! inout
                              TS_URB2D,                                     & ! inout
                              ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! inout  danli 09/24/2023
+                             ALB_URB2D, CHS_URB2D, CHS2_URB2D,             & ! inout danli 12/06/2023
                              num_urban_ndm,                                & ! in
                              urban_map_zrd,                                & ! in
                              urban_map_zwd,                                & ! in
@@ -2897,6 +2898,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: RN_URB2D
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: TS_URB2D
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D ! danli 09/24/2023
+   REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALB_URB2D, CHS_URB2D, CHS2_URB2D ! danli 12/06/2023
 
 ! multi-layer UCM variables
    REAL, DIMENSION(ims:ime, 1:urban_map_zrd, jms:jme), INTENT(INOUT) :: TRB_URB4D
@@ -3168,6 +3170,11 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
       ALPHAR_URB2D(I,J)=0.
       ALPHAB_URB2D(I,J)=0.
       ALPHAG_URB2D(I,J)=0.
+
+      ALB_URB(I,J) = 0.  ! danli 12/06/2023
+      CHS_URB(I,J) = 0.
+      CHS2_URB(I,J) = 0.
+
 
       IF ( sf_urban_physics == 1 ) THEN
       DRELR_URB2D(I,J) = 0.
