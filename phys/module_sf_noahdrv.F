@@ -72,6 +72,7 @@ CONTAINS
                   TRL_URB3D,TBL_URB3D,TGL_URB3D,                & !H urban
                   SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D,TS_URB2D,  & !H urban
                   ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, AHOUT_URB2D,  & ! O urban danli 09/24/2023
+                  ALB_URB2D, CHS_URB2D, CHS2_URB2D,             & ! O urban danli 12/06/2023
                   PSIM_URB2D,PSIH_URB2D,U10_URB2D,V10_URB2D,    & !O urban
                   GZ1OZ0_URB2D,  AKMS_URB2D,                    & !O urban
                   TH2_URB2D,Q2_URB2D, UST_URB2D,                & !O urban
@@ -547,6 +548,11 @@ CONTAINS
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAG_URB2D
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: TA_URB2D
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT) :: AHOUT_URB2D
+
+! added outputs danli 12/06/2023
+     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALB_URB2D
+     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: CHS_URB2D
+     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: CHS2_URB2D
 
 ! output variable lsm --> surface_driver
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT) :: PSIM_URB2D
@@ -1479,6 +1485,11 @@ CONTAINS
             ALPHAG_URB2D(I,J) = ALPHAG
             TA_URB2D(I,J)     = TA_URB
             AHOUT_URB2D(I,J)     = AHOUT
+
+            ! added by danli 12/06/2023
+            ALB_URB2D(I, J) = ALB_URB
+            CHS_URB2D(I, J) = CHS_URB * RHOO_URB * 1004.5
+            CHS2_URB2D(I, J) = CHS2_URB * RHOO_URB * 1004.5
 
             TR_URB2D(I,J) = TR_URB
             TB_URB2D(I,J) = TB_URB
@@ -3850,6 +3861,11 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
            ! TA_URB2D(I,J)     = TA_URB
            ! AHOUT_URB2D(I,J)     = AHOUT
 
+            ! added by danli 12/06/2023, I decided not to add them for now.
+            ! ALB_URB2D(I, J) = ALB_URB
+            ! CHS_URB2D(I, J) = CHS_URB
+            ! CHS2_URB2D(I, J) = CHS2_URB
+            
                   TR_URB2D(I,J) = TR_URB
                   TB_URB2D(I,J) = TB_URB
                   TG_URB2D(I,J) = TG_URB
@@ -4711,6 +4727,11 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
            ! ALPHAG_URB2D(I,J) = ALPHAG
            ! TA_URB2D(I,J)     = TA_URB
            ! AHOUT_URB2D(I,J)     = AHOUT
+
+            ! added by danli 12/06/2023, I decided not to add them for now.
+            ! ALB_URB2D(I, J) = ALB_URB
+            ! CHS_URB2D(I, J) = CHS_URB
+            ! CHS2_URB2D(I, J) = CHS2_URB
 
                   TR_URB2D(I,J) = TR_URB
                   TB_URB2D(I,J) = TB_URB
