@@ -2982,7 +2982,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                   WRITE_MESSAGE(mesg)                  
                   CONTINUE
                ELSE
-                  WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
+                  WRITE(mesg,*) 'SING DEFAULT URBAN MORPHOLOGY'
                   WRITE_MESSAGE(mesg)                 
                   WRITE(mesg,*) 'STDH_URB2D',STDH_URB2D(I,J)
                   WRITE_MESSAGE(mesg)
