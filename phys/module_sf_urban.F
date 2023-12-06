@@ -3171,9 +3171,9 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
       ALPHAB_URB2D(I,J)=0.
       ALPHAG_URB2D(I,J)=0.
 
-      ALB_URB(I,J) = 0.  ! danli 12/06/2023
-      CHS_URB(I,J) = 0.
-      CHS2_URB(I,J) = 0.
+      ALB_URB2D(I,J) = 0.  ! danli 12/06/2023
+      CHS_URB2D(I,J) = 0.
+      CHS2_URB2D(I,J) = 0.
 
 
       IF ( sf_urban_physics == 1 ) THEN
