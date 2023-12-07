@@ -3238,7 +3238,7 @@ CALL lsm_mosaic_init(IVGTYP,config_flags%ISWATER,config_flags%ISURBAN,config_fla
                               TRL_URB3D,TBL_URB3D,TGL_URB3D,                   & !urban
                               SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D, TS_URB2D,    & !urban
                               ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
-                              ALB_URB2D, ALB_RUL2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,             & ! danli 12/06/2023                             
+                              ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,             & ! danli 12/06/2023                             
                               num_urban_ndm,                                   & !urban
                               urban_map_zrd,                                   & !urban
                               urban_map_zwd,                                   & !urban
