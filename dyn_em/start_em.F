@@ -1123,7 +1123,7 @@ endif
                       grid%SH_URB2D, grid%LH_URB2D, grid%G_URB2D, grid%RN_URB2D,  & !Optional urban
                       grid%TS_URB2D,                                               &
                       grid%ALPHAC_URB2D, grid%ALPHAR_URB2D, grid%ALPHAB_URB2D, grid%ALPHAG_URB2D, grid%TA_URB2D, & ! danli 09/24/2023
-                      grid%ALB_URB2D, grid%CHS_URB2D, grid%CHS2_URB2D,  &  ! danli 12/06/2023
+                      grid%ALB_URB2D, grid%ALB_RUL2D, grid%CHS_URB2D, grid%CHS2_URB2D,  &  ! danli 12/06/2023
                       grid%FRC_URB2D, grid%UTYPE_URB2D,      & !Optional urban
                       grid%CMCR_URB2D,grid%TGR_URB2D,grid%TGRL_URB3D,grid%SMR_URB3D, & !Optional urban
                       grid%DRELR_URB2D,grid%DRELB_URB2D,grid%DRELG_URB2D,    & !Optional urban

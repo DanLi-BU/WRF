@@ -786,8 +786,8 @@ use module_wrf_error
 
  if(stdh_urb .lt. 0.0) THEN  ! danli 11/15/2023, utilizing the pre-defined variable "stdh_urb" for other purposes, in this case as a scaling parameter for roof albedo
  ALBR = ALBR * (stdh_urb) * (-1.0)
- WRITE(mesg,*) 'ADJUSTING ALBR TO BE', ALBR
- WRITE_MESSAGE(mesg)  
+ !WRITE(mesg,*) 'ADJUSTING ALBR TO BE', ALBR
+ !WRITE_MESSAGE(mesg)  
  endif ! end of utilizing the pre-defined variable "stdh_urb" for other purposes 
 
 ! Miao, 2007/01/17, cal. ah
@@ -2809,7 +2809,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                              SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D,           & ! inout
                              TS_URB2D,                                     & ! inout
                              ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! inout  danli 09/24/2023
-                             ALB_URB2D, CHS_URB2D, CHS2_URB2D,             & ! inout danli 12/06/2023
+                             ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,             & ! inout danli 12/06/2023
                              num_urban_ndm,                                & ! in
                              urban_map_zrd,                                & ! in
                              urban_map_zwd,                                & ! in
@@ -2898,7 +2898,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: RN_URB2D
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: TS_URB2D
    REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D ! danli 09/24/2023
-   REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALB_URB2D, CHS_URB2D, CHS2_URB2D ! danli 12/06/2023
+   REAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D ! danli 12/06/2023
 
 ! multi-layer UCM variables
    REAL, DIMENSION(ims:ime, 1:urban_map_zrd, jms:jme), INTENT(INOUT) :: TRB_URB4D
@@ -2982,7 +2982,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
                   WRITE_MESSAGE(mesg)                  
                   CONTINUE
                ELSE
-                  WRITE(mesg,*) 'SING DEFAULT URBAN MORPHOLOGY'
+                  WRITE(mesg,*) 'USING DEFAULT URBAN MORPHOLOGY'
                   WRITE_MESSAGE(mesg)                 
                   WRITE(mesg,*) 'STDH_URB2D',STDH_URB2D(I,J)
                   WRITE_MESSAGE(mesg)
@@ -3172,6 +3172,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
       ALPHAG_URB2D(I,J)=0.
 
       ALB_URB2D(I,J) = 0.  ! danli 12/06/2023
+      ALB_RUL2D(I,J) = 0.
       CHS_URB2D(I,J) = 0.
       CHS2_URB2D(I,J) = 0.
 
