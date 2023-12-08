@@ -138,7 +138,7 @@ CONTAINS
                          SH_URB2D, LH_URB2D, G_URB2D, RN_URB2D,  & !Optional urban
                          TS_URB2D,                               &
                          ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
-                         ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,             & ! danli 12/06/2023                             
+                         ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,TS_RUL2D,             & ! danli 12/06/2023                             
                          FRC_URB2D, UTYPE_URB2D,       & !Optional urban
                          CMCR_URB2D,TGR_URB2D,TGRL_URB3D,SMR_URB3D, & !Optional urban
                          DRELR_URB2D,DRELB_URB2D,DRELG_URB2D,    & !Optional urban
@@ -626,7 +626,7 @@ CONTAINS
    INTEGER, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: UTYPE_URB2D !urban
 
    REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D ! danli 09/24/2023
-   REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D  ! danli 12/06/2023
+   REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,TS_RUL2D  ! danli 12/06/2023
 
    INTEGER , INTENT(IN)        :: num_urban_ndm
    INTEGER , INTENT(IN)        :: urban_map_zrd
@@ -1392,7 +1392,7 @@ CONTAINS
                 SH_URB2D, LH_URB2D, G_URB2D, RN_URB2D,          & !Optional urban
                 TS_URB2D,                                       &
                 ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
-                ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,               & !  danli 12/06/2023
+                ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D, TS_RUL2D,            & !  danli 12/06/2023
                 FRC_URB2D, UTYPE_URB2D,                         &
                 SF_URBAN_PHYSICS,                               & !Optional urban
                 CMCR_URB2D,TGR_URB2D,TGRL_URB3D,SMR_URB3D,      & !Optional urban
@@ -2403,7 +2403,7 @@ CONTAINS
                 SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D,             & !Optional urban
                 TS_URB2D,                                       &
                 ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
-                ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,               & ! danli 12/06/2023
+                ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D, TS_RUL2D,            & ! danli 12/06/2023
                 FRC_URB2D, UTYPE_URB2D,                         &
                 SF_URBAN_PHYSICS,                               & !Optional urban
                 CMCR_URB2D,TGR_URB2D,TGRL_URB3D,SMR_URB3D,      & !Optional urban
@@ -2733,7 +2733,7 @@ CONTAINS
     INTEGER, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: UTYPE_URB2D !Optional urban
     
     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D ! danli 09/24/2023
-    REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D  ! danli 12/06/2023
+    REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D, TS_RUL2D  ! danli 12/06/2023
 
 !    REAL, DIMENSION( ims:ime, 1:num_roof_layers, jms:jme ), INTENT(INOUT) :: TRL_URB3D !Optional urban
 !    REAL, DIMENSION( ims:ime, 1:num_wall_layers, jms:jme ), INTENT(INOUT) :: TBL_URB3D !Optional urban
@@ -3120,7 +3120,7 @@ CONTAINS
                               TRL_URB3D,TBL_URB3D,TGL_URB3D,                   & !urban
                               SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D, TS_URB2D,    & !urban
                               ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
-                              ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,             & !  danli 12/06/2023                              
+                              ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D, TS_RUL2D,            & !  danli 12/06/2023                              
                               num_urban_ndm,                                   & !urban
                               urban_map_zrd,                                   & !urban
                               urban_map_zwd,                                   & !urban
@@ -3238,7 +3238,7 @@ CALL lsm_mosaic_init(IVGTYP,config_flags%ISWATER,config_flags%ISURBAN,config_fla
                               TRL_URB3D,TBL_URB3D,TGL_URB3D,                   & !urban
                               SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D, TS_URB2D,    & !urban
                               ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
-                              ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,             & ! danli 12/06/2023                             
+                              ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D,TS_RUL2D,             & ! danli 12/06/2023                             
                               num_urban_ndm,                                   & !urban
                               urban_map_zrd,                                   & !urban
                               urban_map_zwd,                                   & !urban
