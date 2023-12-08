@@ -859,6 +859,7 @@ state    real   ALB_URB2D        ij    misc        1         -       rhd=(interp
 state    real   ALB_RUL2D        ij    misc        1         -       rhd=(interp_mask_field:lu_index,iswater)u=(copy_fcnm)       "ALB_RUL2D"  "PERVIOUS ALBEDO"        ""
 state    real   CHS_URB2D        ij    misc        1         -       rhd=(interp_mask_field:lu_index,iswater)u=(copy_fcnm)       "CHS_URB2D"  "URBAN EFFECTIVE CONDUCTANCE FOR TSK"        ""
 state    real   CHS2_URB2D        ij    misc        1         -       rhd=(interp_mask_field:lu_index,iswater)u=(copy_fcnm)      "CHS2_URB2D"  "URBAN EFFECTIVE CONDUCTANCE FOR T2"        ""
+state    real   TS_RUL2D        ij    misc        1         -       rhd=(interp_mask_field:lu_index,iswater)u=(copy_fcnm)       "TS_RUL"  "TSK for PERVIOUS URBAN"          "K"
 state    real   XXXR_URB2D       ij     misc        1         -     rd=(interp_mask_field:lu_index,iswater)u=(copy_fcnm)      "XXXR_URB" "M-O LENGTH ABOVE URBAN ROOF"   "dimensionless"
 state    real   XXXB_URB2D       ij    misc        1         -      rd=(interp_mask_field:lu_index,iswater)u=(copy_fcnm)      "XXXB_URB" "M-O LENGTH ABOVE URBAN WALL"   "dimensionless"
 state    real   XXXG_URB2D       ij    misc        1         -      rd=(interp_mask_field:lu_index,iswater)u=(copy_fcnm)       "XXXG_URB" "M-O LENGTH ABOVE URBAN ROAD"   "dimensionless"
