@@ -669,7 +669,7 @@ BENCH_START(surf_driver_tim)
      &        ,ALPHAC_URB2D=grid%alphac_urb2d, ALPHAR_URB2D=grid%alphar_urb2d  &  ! danli 09/24/2023
      &        ,ALPHAB_URB2D=grid%alphab_urb2d, ALPHAG_URB2D=grid%alphag_urb2d  &
      &        ,TA_URB2D=grid%ta_urb2d                                     &
-     &        ,ALB_URB2D=grid%alb_urb2d, ALB_RUL2D=grid%alb_rul2d, CHS_URB2D=grid%chs_urb2d, CHS2_URB2D=grid%chs2_urb2d, TS_RUL2D=grid%ts_urb2d,  &  ! danli 12/06/2023
+     &        ,ALB_URB2D=grid%alb_urb2d, ALB_RUL2D=grid%alb_rul2d, CHS_URB2D=grid%chs_urb2d, CHS2_URB2D=grid%chs2_urb2d, TS_RUL2D=grid%ts_rul2d,  &  ! danli 12/06/2023
      &        ,FRC_URB2D=grid%frc_urb2d                                   & !H urban
      &        ,UTYPE_URB2D=grid%utype_urb2d                               & !H urban
          ! Optional urban for BEP scheme
