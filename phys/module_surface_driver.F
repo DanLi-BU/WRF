@@ -177,6 +177,7 @@ CONTAINS
      &          ,trl_urb3d,tbl_urb3d,tgl_urb3d                        & !H urban
      &          ,sh_urb2d,lh_urb2d,g_urb2d,rn_urb2d,ts_urb2d          & !H urban
      &          ,ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D   & !H added by danli 09/24/2023
+     &          ,ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D, TS_RUL2D              & !H urban danli 12/06/2023
      &          ,frc_urb2d, utype_urb2d                               & !H urban
      &          ,cmr_sfcdif,chr_sfcdif,cmc_sfcdif,chc_sfcdif          &
      &          ,cmgr_sfcdif,chgr_sfcdif                              &
@@ -1255,6 +1256,7 @@ CONTAINS
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT):: TS_URB2D !urban
 
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D ! danli 09/24/2023
+     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D, TS_RUL2D   ! danli 12/06/2023
 
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  :: FRC_URB2D  !urban
      INTEGER, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  :: UTYPE_URB2D  !urban
@@ -2817,6 +2819,7 @@ CONTAINS
                 trl_urb3d,tbl_urb3d,tgl_urb3d,                  & !H urban
                 sh_urb2d,lh_urb2d,g_urb2d,rn_urb2d,ts_urb2d,    & !H urban
                 ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
+                ALB_URB2D, ALB_RUL2D, CHS_URB2D, CHS2_URB2D, TS_RUL2D,            & !O urban danli 12/06/2023
                 psim_urb2d,psih_urb2d,u10_urb2d,v10_urb2d,      & !O urban
                 GZ1OZ0_urb2d, AKMS_URB2D,                       & !O urban
                 th2_urb2d,q2_urb2d,ust_urb2d,                   & !O urban

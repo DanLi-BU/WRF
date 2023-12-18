@@ -34,8 +34,8 @@
 ! aerosols is (ILogNormal_modes_Aerosol = 1, manadatory flag). The modes parameters
 ! (concentration, mean radius and model width) are defined inside the routine
 ! "LogNormal_modes_Aerosol".
-!  **NOTE**: In order to set aerosol BC for the outer-most domain, set the threshold 
-! 'DX_BOUND' = 'MY_DX_OUTER_DOMAIN'-1. For example, if the outermost domain 
+!  **NOTE**: In order to set aerosol BC for the outer-most domain, set the threshold
+! 'DX_BOUND' = 'MY_DX_OUTER_DOMAIN'-1. For example, if the outermost domain
 ! resolutionis is 4km 'DX_BOUND' = 3999.
 
 
@@ -72,9 +72,9 @@
 
 ! When using the FSBM-2 version please cite:
 ! -------------------------------------------
-!     Shpund, J., Khain, A., Lynn, B., Fan, J., Han, B., Ryzhkov, A., Snyder, J., 
-! Dudhia, J. and Gill, D., 2019. Simulating a Mesoscale Convective System Using WRF 
-! With a New Spectral Bin Microphysics: 1: Hail vs Graupel. 
+!     Shpund, J., Khain, A., Lynn, B., Fan, J., Han, B., Ryzhkov, A., Snyder, J.,
+! Dudhia, J. and Gill, D., 2019. Simulating a Mesoscale Convective System Using WRF
+! With a New Spectral Bin Microphysics: 1: Hail vs Graupel.
 ! Journal of Geophysical Research: Atmospheres.
 
 ! +---------------------------------------------------------------------------- +
@@ -1376,7 +1376,7 @@ enddo
  ENDDO
 
  RETURN
- END SUBROUTINE INTERPOL_SE 
+ END SUBROUTINE INTERPOL_SE
 ! +-------------------------------------------------------------------------------+
     subroutine modkrn_KS (tt,qq,pp,rho,factor_t,ttcoal,ICase,Icondition, &
                           Iin,Jin,Kin)
@@ -1400,7 +1400,7 @@ enddo
 
 
     tc = tt - 273.15
-    if (tc > 0.0) return  
+    if (tc > 0.0) return
 
     SELECT CASE (ICase)
 
@@ -1717,7 +1717,7 @@ end module module_mp_SBM_Collision
    ES1N = AA1_MY*EXP(-BB1_MY/TT)
    POLYSVP = ES1N ! [dyn/cm2] to [mb]
 
- ! ice  
+ ! ice
  Case(1)
    ES2N = AA2_MY*EXP(-BB2_MY/TT)
    POLYSVP = ES2N ! [dyn/cm2] to [mb]
@@ -3735,7 +3735,7 @@ end module module_mp_SBM_Auxiliary
 							            ccncon(modemax), sig(modemax), radius_mean(modemax)
 		real(kind=r8size)  :: CONCCCNIN, FCCNR_tmp(NKR_local), DEG01, X0DROP, &
 						              XOCCN, X0, R0, RCCN_MICRON, S_KR, S(NKR_local), X0CCN, ROCCN(NKR_local), &
-	                        RO_SOLUTE_Ammon, RO_SOLUTE_NaCl,arg11,arg12,arg13,arg21,arg22,arg23, & 
+	                        RO_SOLUTE_Ammon, RO_SOLUTE_NaCl,arg11,arg12,arg13,arg21,arg22,arg23, &
                           arg31,arg32,arg33,dNbydlogR_norm1,dNbydlogR_norm2,dNbydlogR_norm3
 
 
@@ -3796,7 +3796,7 @@ end module module_mp_SBM_Auxiliary
   arg11 = ccncon1/(sqrt(2.0D0*pi)*log(sig1))
   arg21 = ccncon2/(sqrt(2.0D0*pi)*log(sig2))
   arg31 = ccncon3/(sqrt(2.0D0*pi)*log(sig3))
-  
+
   dNbydlogR_norm1 = 0.0
   dNbydlogR_norm2 = 0.0
   dNbydlogR_norm3 = 0.0
@@ -3814,7 +3814,7 @@ end module module_mp_SBM_Auxiliary
           FCCNR_tmp(kr) = dNbydlogR_norm3/col
       endif
 enddo
-  
+
   CONCCCNIN = col*sum(FCCNR_tmp(:))
   print*,'CONCCCNIN',CONCCCNIN
   if(IType == 1) FCCNR_MAR = Scale_Fa*FCCNR_tmp
@@ -3851,14 +3851,14 @@ enddo
 
  ! Kind paramater
  INTEGER, PARAMETER, PRIVATE:: R8SIZE = 8
- INTEGER, PARAMETER, PRIVATE:: R16SIZE = 16 
+ INTEGER, PARAMETER, PRIVATE:: R16SIZE = 16
  INTEGER, PARAMETER, PRIVATE:: R4SIZE = 4
 
  ! JacobS: Hard coding the bin-wise indices for the NMM core
  INTEGER, PRIVATE,PARAMETER ::  p_ff1i01=2, p_ff1i33=34,p_ff5i01=35,p_ff5i33=67,p_ff6i01=68,&
                                 p_ff6i33=100,p_ff8i01=101,p_ff8i43=143
 
- ! JacobS: Hard coding for the polarimetric operator output array 
+ ! JacobS: Hard coding for the polarimetric operator output array
   INTEGER, PRIVATE,PARAMETER :: r_p_ff1i01=2, r_p_ff1i06=07,r_p_ff2i01=08,r_p_ff2i06=13,r_p_ff3i01=14,&
                                 r_p_ff3i06=19,r_p_ff4i01=20,r_p_ff4i06=25,r_p_ff5i01=26,r_p_ff5i06=31,r_p_ff6i01=32,r_p_ff6i06=37,&
                                 r_p_ff7i01=38,r_p_ff7i06=43,r_p_ff8i01=44,r_p_ff8i06=49,r_p_ff9i01=50,r_p_ff9i06=55
@@ -4298,7 +4298,7 @@ enddo
 
 ! +--------------------------------------------+
  ! ... Aerosols boundary conditions
- !    (for 3D application running with MPI)   
+ !    (for 3D application running with MPI)
  ! +--------------------------------------------+
 #if (defined(DM_PARALLEL))
     if (itimestep > 1 .and. domain_id == 1)then
@@ -4594,7 +4594,7 @@ enddo
               SUP2_OLD=DEL2IN
 
               IF(del1ad > 0.0 .or. del2ad > 0.0 .or. (sum(FF1R)+sum(FF3R)+sum(FF4R)+sum(FF5R)) > 1.0e-20)THEN
-                ! JacobS: commented for this version                
+                ! JacobS: commented for this version
                 !                CALL Relaxation_Time(TT,QQ,PP,rhocgs(I,K,J),DEL1IN,DEL2IN, &
                 !                                      XL,VR1_Z(:,K),FF1R,RLEC,RO1BL, &
                 !                                      XI,VR2_Z,FF2R,RIEC,RO2BL, &
@@ -4669,8 +4669,8 @@ enddo
                                             ,RCCN,DROPRADII,NKR,NKR_aerosol,ICEMAX,ICEPROCS &
                                             ,W_Stag_My,Is_This_CloudBase,RO_SOLUTE,IONS,MWAERO &
                                             ,I,J,K)
-                        
-                        
+
+
                           DO KR=1,NKR
                             FF1R(KR)=FF1IN(KR)
                             DO ICE=1,ICEMAX
@@ -4787,12 +4787,12 @@ enddo
 
                     END IF
                   END DO ! NCOLL - end of NCOLL loop
-                                   
+
                   T_new(i,k,j) = tt
                   qv(i,k,j) = qq
-                   
-            ! in case Sw,Si,mass  
-            ENDIF 
+
+            ! in case Sw,Si,mass
+            ENDIF
         ! in case T_OLD(I,K,J).GT.213.15
         END IF
  ! +-------------------------------- +
@@ -5141,7 +5141,7 @@ enddo
       DISTANCE = 1.D5
 
       do k=kts,kte
-        FF2R_d = 0.0 	 	
+        FF2R_d = 0.0
         FLIQFR_SD = 0.0
         FLIQFR_GD = 0.0
         FLIQFR_HD = 0.0
@@ -5153,7 +5153,7 @@ enddo
 
 ! ... Drops
         KRR=0
-        do kr = p_ff1i01,p_ff1i33 
+        do kr = p_ff1i01,p_ff1i33
           KRR=KRR+1
           FF1R_D(KRR) = (1./RHOCGS(I,K,J))*chem_new(I,K,J,KR)*XL(KRR)*XL(KRR)*3.0
           if (FF1R_D(KRR) < 1.0D-20) FF1R_D(KRR) = 0.0
@@ -6141,8 +6141,8 @@ enddo
     BRKWEIGHT = 0.0d0
  	 CALL BREAKINIT_KS(PKIJ,QKJ,ECOALMASSM,BRKWEIGHT,XL,DROPRADII,BR_MAX,JBREAK,JMAX,NKR,VR1) ! Rain Spontanous Breakup
 #if (defined(DM_PARALLEL))
- 	 	DM_BCAST_MACRO_R4 (PKIJ)
-    DM_BCAST_MACRO_R4 (QKJ)
+ 	 	DM_BCAST_MACRO_R4(PKIJ)
+    DM_BCAST_MACRO_R4(QKJ)
 #endif
  	  WRITE(errmess, '(A,I2)') 'FAST_SBM_INIT : succesfull reading BREAKINIT_KS" '
     CALL wrf_debug(000, errmess)
