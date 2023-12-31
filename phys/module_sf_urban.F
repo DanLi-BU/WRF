@@ -1500,7 +1500,7 @@ ENDIF
    FLXTHG=HG/RHO/CP/100.
    FLXHUMG=ELEG/RHO/EL/100.
 
-ELSE    ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023   This implicitly uses CH_SCHEME = 2 and IMP_SCHEME = 1, and does not work with ahoption = 3
+ELSE    ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023   This implicitly uses CH_SCHEME = 2 and IMP_SCHEME = 1
 
 
      T1VC = TCP* (1.0+ 0.61 * QA)
