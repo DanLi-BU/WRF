@@ -1825,7 +1825,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
 !-------------------------------------------------------------------------------
 !===Yang, 2014/10/08, cal. ah. alh. green roof===
  if(groption==1) then
-   if(ahoption==1 .OR. ahoption==4) then
+   if(ahoption==1 .OR. ahoption==4 .OR. ahoption==2) then
      FLXTH  = ((1.-FGR)*R*FLXTHR + FGR*R*FLXTHGR + W*FLXTHB + RW*FLXTHG)+ AH/RHOO/CPP
    else
      FLXTH  = ((1.-FGR)*R*FLXTHR + FGR*R*FLXTHGR + W*FLXTHB + RW*FLXTHG)
