@@ -1839,7 +1839,7 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
    FLXG =   ((1.-FGR)*R*G0R + FGR*R*G0GR+ W*G0B + RW*G0G)
    LNET =   (1.-FGR) * R * RR + FGR *R* RGR + W * RB +  RW * RG
  else
-   if(ahoption==1 .OR. ahoption==4 ) then
+   if(ahoption==1 .OR. ahoption==4 .OR. ahoption==2) then
      FLXTH  = ( R*FLXTHR  + W*FLXTHB  + RW*FLXTHG ) + AH/RHOO/CPP
    else
      FLXTH  = ( R*FLXTHR  + W*FLXTHB  + RW*FLXTHG )
