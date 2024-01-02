@@ -1211,6 +1211,14 @@ ENDIF
    CALL SFCDIF_URB(ZA,Z0C,T1VC,TH2V,UA,AKANDA_URBAN,CMC_URB,CHC_URB,RLMO_URB,CDC)
    ALPHAC =  RHO*CP*CHC_URB
 
+   IF (CH_SCHEME == 100) THEN  ! danli 01/01/2024
+
+   CALL SFCDIF_URB_DL(ZA,Z0C,T1VC,TH2V,UA,AKANDA_URBAN,CMC_URB,CHC_URB,RLMO_URB,CDC)
+   ALPHAC =  RHO*CP*CHC_URB 
+
+   END
+
+
    IF (CH_SCHEME == 1) THEN
 
      Z=ZDC
@@ -3593,6 +3601,207 @@ SUBROUTINE SFCDIF_URB (ZLM,Z0,THZ0,THLM,SFCSPD,AKANDA,AKMS,AKHS,RLMO,CD)
 ! ----------------------------------------------------------------------
   END SUBROUTINE SFCDIF_URB
 ! ----------------------------------------------------------------------
+
+!===========================================================================
+
+SUBROUTINE SFCDIF_URB_DL (ZLM,Z0,THZ0,THLM,SFCSPD,AKANDA,AKMS,AKHS,RLMO,CD)
+
+! ----------------------------------------------------------------------
+! SUBROUTINE SFCDIF_URB_DL (Urban version of SFCDIF_off) modified by Dan Li 01/01/2024, thermal roughness length is equal to momentum roughness length
+! ----------------------------------------------------------------------
+! CALCULATE SURFACE LAYER EXCHANGE COEFFICIENTS VIA ITERATIVE PROCESS.
+! SEE CHEN ET AL (1997, BLM)
+! ----------------------------------------------------------------------
+
+      IMPLICIT NONE
+      REAL     WWST, WWST2, G, VKRM, EXCM, BETA, BTG, ELFC, WOLD, WNEW
+      REAL     PIHF, EPSU2, EPSUST, EPSIT, EPSA, ZTMIN, ZTMAX, HPBL,     &
+     & SQVISC
+      REAL     RIC, RRIC, FHNEU, RFC,RLMO_THR, RFAC, ZZ, PSLMU, PSLMS, PSLHU,     &
+     & PSLHS
+      REAL     XX, PSPMU, YY, PSPMS, PSPHU, PSPHS, ZLM, Z0, THZ0, THLM
+      REAL     SFCSPD, AKANDA, AKMS, AKHS, ZU, ZT, RDZ, CXCH
+      REAL     DTHV, DU2, BTGH, WSTAR2, USTAR, ZSLU, ZSLT, RLOGU, RLOGT
+      REAL     RLMO, ZETALT, ZETALU, ZETAU, ZETAT, XLU4, XLT4, XU4, XT4
+!CC   ......REAL ZTFC
+
+      REAL     XLU, XLT, XU, XT, PSMZ, SIMM, PSHZ, SIMH, USTARK, RLMN,  &
+     &         RLMA
+
+      INTEGER  ITRMX, ILECH, ITR
+      REAL,    INTENT(OUT) :: CD
+      PARAMETER                                                         &
+     &        (WWST = 1.2,WWST2 = WWST * WWST,G = 9.8,VKRM = 0.40,      &
+     &         EXCM = 0.001                                             &
+     &        ,BETA = 1./270.,BTG = BETA * G,ELFC = VKRM * BTG          &
+     &                  ,WOLD =.15,WNEW = 1. - WOLD,ITRMX = 05,         &
+     &                   PIHF = 3.14159265/2.)
+      PARAMETER                                                         &
+     &         (EPSU2 = 1.E-4,EPSUST = 0.07,EPSIT = 1.E-4,EPSA = 1.E-8  &
+     &         ,ZTMIN = -5.,ZTMAX = 1.,HPBL = 1000.0                    &
+     &          ,SQVISC = 258.2)
+      PARAMETER                                                         &
+     &       (RIC = 0.183,RRIC = 1.0/ RIC,FHNEU = 0.8,RFC = 0.191       &
+     &        ,RLMO_THR = 0.001,RFAC = RIC / (FHNEU * RFC * RFC))
+
+! ----------------------------------------------------------------------
+! NOTE: THE TWO CODE BLOCKS BELOW DEFINE FUNCTIONS
+! ----------------------------------------------------------------------
+! LECH'S SURFACE FUNCTIONS
+! ----------------------------------------------------------------------
+      PSLMU (ZZ)= -0.96* log (1.0-4.5* ZZ)
+      PSLMS (ZZ)= ZZ * RRIC -2.076* (1. -1./ (ZZ +1.))
+      PSLHU (ZZ)= -0.96* log (1.0-4.5* ZZ)
+
+! ----------------------------------------------------------------------
+! PAULSON'S SURFACE FUNCTIONS
+! ----------------------------------------------------------------------
+      PSLHS (ZZ)= ZZ * RFAC -2.076* (1. -1./ (ZZ +1.))
+      PSPMU (XX)= -2.* log ( (XX +1.)*0.5) - log ( (XX * XX +1.)*0.5)   &
+     &        +2.* ATAN (XX)                                            &
+     &- PIHF
+      PSPMS (YY)= 5.* YY
+      PSPHU (XX)= -2.* log ( (XX * XX +1.)*0.5)
+
+! ----------------------------------------------------------------------
+! THIS ROUTINE SFCDIF CAN HANDLE BOTH OVER OPEN WATER (SEA, OCEAN) AND
+! OVER SOLID SURFACE (LAND, SEA-ICE).
+! ----------------------------------------------------------------------
+      PSPHS (YY)= 5.* YY
+
+! ----------------------------------------------------------------------
+!     ZTFC: RATIO OF ZOH/ZOM  LESS OR EQUAL THAN 1
+!     C......ZTFC=0.1
+!     CZIL: CONSTANT C IN Zilitinkevich, S. S.1995,:NOTE ABOUT ZT
+! ----------------------------------------------------------------------
+      ILECH = 0
+
+! ----------------------------------------------------------------------
+!      ZILFC = - CZIL * VKRM * SQVISC
+!     C.......ZT=Z0*ZTFC
+      ZU = Z0
+      RDZ = 1./ ZLM
+      CXCH = EXCM * RDZ
+      DTHV = THLM - THZ0
+
+! ----------------------------------------------------------------------
+! BELJARS CORRECTION OF USTAR
+! ----------------------------------------------------------------------
+      DU2 = MAX (SFCSPD * SFCSPD,EPSU2)
+!cc   If statements to avoid TANGENT LINEAR problems near zero
+      BTGH = BTG * HPBL
+      IF (BTGH * AKHS * DTHV .ne. 0.0) THEN
+         WSTAR2 = WWST2* ABS (BTGH * AKHS * DTHV)** (2./3.)
+      ELSE
+         WSTAR2 = 0.0
+      END IF
+
+! ----------------------------------------------------------------------
+! ZILITINKEVITCH APPROACH FOR ZT
+! ----------------------------------------------------------------------
+      USTAR = MAX (SQRT (AKMS * SQRT (DU2+ WSTAR2)),EPSUST)
+
+! ----------------------------------------------------------------------
+! KCL/TL Try Kanda approach instead (Kanda et al. 2007, JAMC)
+!      ZT = EXP (ZILFC * SQRT (USTAR * Z0))* Z0
+!      ZT = EXP (2.0-AKANDA*(SQVISC**2 * USTAR * Z0)**0.25)* Z0
+       ZT = Z0          ! danli 01/01/2024
+
+      ZSLU = ZLM + ZU
+
+      ZSLT = ZLM + ZT
+      RLOGU = log (ZSLU / ZU)
+
+      RLOGT = log (ZSLT / ZT)
+
+      RLMO = ELFC * AKHS * DTHV / USTAR **3
+! ----------------------------------------------------------------------
+! 1./MONIN-OBUKKHOV LENGTH-SCALE
+! ----------------------------------------------------------------------
+      DO ITR = 1,ITRMX
+         ZETALT = MAX (ZSLT * RLMO,ZTMIN)
+         RLMO = ZETALT / ZSLT
+         ZETALU = ZSLU * RLMO
+         ZETAU = ZU * RLMO
+
+         ZETAT = ZT * RLMO
+         IF (ILECH .eq. 0) THEN
+            IF (RLMO .lt. 0.0)THEN
+               XLU4 = 1. -16.* ZETALU
+               XLT4 = 1. -16.* ZETALT
+               XU4 = 1. -16.* ZETAU
+
+               XT4 = 1. -16.* ZETAT
+               XLU = SQRT (SQRT (XLU4))
+               XLT = SQRT (SQRT (XLT4))
+               XU = SQRT (SQRT (XU4))
+
+               XT = SQRT (SQRT (XT4))
+
+               PSMZ = PSPMU (XU)
+               SIMM = PSPMU (XLU) - PSMZ + RLOGU
+               PSHZ = PSPHU (XT)
+               SIMH = PSPHU (XLT) - PSHZ + RLOGT
+            ELSE
+               ZETALU = MIN (ZETALU,ZTMAX)
+               ZETALT = MIN (ZETALT,ZTMAX)
+               PSMZ = PSPMS (ZETAU)
+               SIMM = PSPMS (ZETALU) - PSMZ + RLOGU
+               PSHZ = PSPHS (ZETAT)
+               SIMH = PSPHS (ZETALT) - PSHZ + RLOGT
+            END IF
+! ----------------------------------------------------------------------
+! LECH'S FUNCTIONS
+! ----------------------------------------------------------------------
+         ELSE
+            IF (RLMO .lt. 0.)THEN
+               PSMZ = PSLMU (ZETAU)
+               SIMM = PSLMU (ZETALU) - PSMZ + RLOGU
+               PSHZ = PSLHU (ZETAT)
+               SIMH = PSLHU (ZETALT) - PSHZ + RLOGT
+            ELSE
+               ZETALU = MIN (ZETALU,ZTMAX)
+               ZETALT = MIN (ZETALT,ZTMAX)
+               PSMZ = PSLMS (ZETAU)
+               SIMM = PSLMS (ZETALU) - PSMZ + RLOGU
+               PSHZ = PSLHS (ZETAT)
+               SIMH = PSLHS (ZETALT) - PSHZ + RLOGT
+            END IF
+! ----------------------------------------------------------------------
+! BELJAARS CORRECTION FOR USTAR
+! ----------------------------------------------------------------------
+         END IF
+            USTAR = MAX (SQRT (AKMS * SQRT (DU2+ WSTAR2)),EPSUST)
+            !KCL/TL
+            !ZT = EXP (ZILFC * SQRT (USTAR * Z0))* Z0
+            ZT = EXP (2.0-AKANDA*(SQVISC**2 * USTAR * Z0)**0.25)* Z0
+            ZSLT = ZLM + ZT
+            RLOGT = log (ZSLT / ZT)
+            USTARK = USTAR * VKRM
+            AKMS = MAX (USTARK / SIMM,CXCH)
+            AKHS = MAX (USTARK / SIMH,CXCH)
+!
+         IF (BTGH * AKHS * DTHV .ne. 0.0) THEN
+            WSTAR2 = WWST2* ABS (BTGH * AKHS * DTHV)** (2./3.)
+         ELSE
+            WSTAR2 = 0.0
+         END IF
+!-----------------------------------------------------------------------
+         RLMN = ELFC * AKHS * DTHV / USTAR **3
+!-----------------------------------------------------------------------
+!     IF(ABS((RLMN-RLMO)/RLMA).LT.EPSIT)    GO TO 110
+!-----------------------------------------------------------------------
+         RLMA = RLMO * WOLD+ RLMN * WNEW
+!-----------------------------------------------------------------------
+         RLMO = RLMA
+
+      END DO
+
+      CD = USTAR*USTAR/SFCSPD**2
+! ----------------------------------------------------------------------
+  END SUBROUTINE SFCDIF_URB_DL
+! ----------------------------------------------------------------------
+
 !===========================================================================
 !  DIREVAP
 !  CALCULATE DIRECT SOIL EVAPORATION

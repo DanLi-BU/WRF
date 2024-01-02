@@ -114,6 +114,8 @@ BOUNDG: 1
 
 #
 # Ch of Wall and Road [ 1: M-O Similarity Theory, 2: Empirical Form of Narita et al., 1997 (recommended) ]
+# When CH_SCHEME == 100, Empirical Form of Narita et al., 1997 is still used for computing sfc exchange for building wall and road, but use thermal roughness length 
+# equal to momentum roughness length for computing sfc exchange between the canopy air and atmosphere
 #      (sf_urban_physics=1)
 #
 
