@@ -3784,7 +3784,8 @@ SUBROUTINE SFCDIF_URB_DL (ZLM,Z0,THZ0,THLM,SFCSPD,AKANDA,AKMS,AKHS,RLMO,CD)
             USTAR = MAX (SQRT (AKMS * SQRT (DU2+ WSTAR2)),EPSUST)
             !KCL/TL
             !ZT = EXP (ZILFC * SQRT (USTAR * Z0))* Z0
-            ZT = EXP (2.0-AKANDA*(SQVISC**2 * USTAR * Z0)**0.25)* Z0
+            !ZT = EXP (2.0-AKANDA*(SQVISC**2 * USTAR * Z0)**0.25)* Z0
+            ZT = Z0              ! danli 01/02/2024
             ZSLT = ZLM + ZT
             RLOGT = log (ZSLT / ZT)
             USTARK = USTAR * VKRM
