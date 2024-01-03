@@ -71,7 +71,7 @@ CONTAINS
                   XXXR_URB2D,XXXB_URB2D,XXXG_URB2D,XXXC_URB2D,  & !H urban
                   TRL_URB3D,TBL_URB3D,TGL_URB3D,                & !H urban
                   SH_URB2D,LH_URB2D,G_URB2D,RN_URB2D,TS_URB2D,  & !H urban
-                  ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! O urban danli 09/24/2023
+                  ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, AHOUT_URB2D,  & ! O urban danli 09/24/2023
                   PSIM_URB2D,PSIH_URB2D,U10_URB2D,V10_URB2D,    & !O urban
                   GZ1OZ0_URB2D,  AKMS_URB2D,                    & !O urban
                   TH2_URB2D,Q2_URB2D, UST_URB2D,                & !O urban
@@ -546,6 +546,7 @@ CONTAINS
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAB_URB2D
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAG_URB2D
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: TA_URB2D
+     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT) :: AHOUT_URB2D
 
 ! output variable lsm --> surface_driver
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT) :: PSIM_URB2D
@@ -667,7 +668,7 @@ CONTAINS
    REAL :: check
 
 ! added danli 09/24/2023
-   REAL :: ALPHAC, ALPHAR, ALPHAB, ALPHAG
+   REAL :: ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT
 
 ! ----------------------------------------------------------------------
 ! DECLARATIONS END - urban
@@ -1407,7 +1408,7 @@ CONTAINS
                        TGRL_URB,SMR_URB,CMGR_URB,CHGR_URB,jmonth,       & ! H
                        DRELR_URB,DRELB_URB,                             & ! H
                        DRELG_URB,FLXHUMR_URB,FLXHUMB_URB,FLXHUMG_URB,   &
-                       ALPHAC, ALPHAR, ALPHAB, ALPHAG)                    ! danli 09/24/2023
+                       ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT)                    ! danli 09/24/2023
 
 
 #if 0
@@ -1477,6 +1478,7 @@ CONTAINS
             ALPHAB_URB2D(I,J) = ALPHAB
             ALPHAG_URB2D(I,J) = ALPHAG
             TA_URB2D(I,J)     = TA_URB
+            AHOUT_URB2D(I,J)     = AHOUT
 
             TR_URB2D(I,J) = TR_URB
             TB_URB2D(I,J) = TB_URB
@@ -3778,7 +3780,7 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
                              TGRL_URB,SMR_URB,CMGR_URB,CHGR_URB,jmonth,       & ! H
                              DRELR_URB,DRELB_URB,                             & ! H
                              DRELG_URB,FLXHUMR_URB,FLXHUMB_URB,FLXHUMG_URB,   &
-                             ALPHAC, ALPHAR, ALPHAB, ALPHAG)                    ! danli 09/24/2023
+                             ALPHAC, ALPHAR, ALPHAB, ALPHAG, AH_OUT)                    ! danli 09/24/2023
 
 #if 0
                 IF(IPRINT) THEN

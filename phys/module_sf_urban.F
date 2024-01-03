@@ -316,7 +316,7 @@ use module_wrf_error
                     lp_urb,hgt_urb,frc_urb,lb_urb,zo_check,           & ! O
                     CMCR,TGR,TGRL,SMR,CMGR_URB,CHGR_URB,jmonth,       & ! H
                     DRELR,DRELB,DRELG,FLXHUMR,FLXHUMB,FLXHUMG,        &
-                    ALPHAC, ALPHAR, ALPHAB, ALPHAG)                     ! danli 09/24/2023
+                    ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT)                     ! danli 09/24/2023
 
    IMPLICIT NONE
 
@@ -511,7 +511,8 @@ use module_wrf_error
    REAL :: SR, SB, SG, RR, RB, RG
    REAL :: SR1, SR2, SB1, SB2, SG1, SG2, RR1, RR2, RB1, RB2, RG1, RG2
    REAL :: HR, HB, HG, ELER, ELEB, ELEG, G0R, G0B, G0G
-   REAL, INTENT(INOUT) :: ALPHAC, ALPHAR, ALPHAB, ALPHAG  ! danli 09/24/20223
+   REAL, INTENT(INOUT) :: ALPHAC, ALPHAR, ALPHAB, ALPHAG  ! danli 09/24/2023
+   REAL, INTENT(OUT) :: AHOUT  ! danli 01/03/2024
    REAL :: CHC, CHR, CHB, CHG, CDC, CDR, CDB, CDG, CDGR
    REAL :: C1R, C1B, C1G, TE, TC1, TC2, QC1, QC2, QS0R, QS0B, QS0G,RHO,ES
 
@@ -1994,6 +1995,18 @@ ENDIF   ! ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023
    Q2 = QS + (QA-QS)*(PSIT2/PSIT)    ! humidity at 2 m       [-]
 
 !   TS = (LW/SIG_SI/0.88)**0.25       ! Radiative temperature [K]
+
+!-------------------------------------------------------
+!  When ahoption == 5, AH is not added to the sensible heat flux in the urban code
+!  in order not to affect the grid-scale T2 and TSK calculation in SFCDIAGS.
+!  AHOUT will be added to the senisble heat flux after SFCDIAGS is done.
+!-------------------------------------------------------
+   IF (ahoption==5) THEN 
+   AHOUT = AH
+   ELSE
+   AHOUT = 0
+
+   ENDIF
 
    END SUBROUTINE urban
 !===============================================================================

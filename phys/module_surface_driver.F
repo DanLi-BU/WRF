@@ -1255,6 +1255,7 @@ CONTAINS
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT):: TS_URB2D !urban
 
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D ! danli 09/24/2023
+     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme )  ::  AHOUT_URB2D ! danli 01/02/2024, local variable
 
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  :: FRC_URB2D  !urban
      INTEGER, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  :: UTYPE_URB2D  !urban
@@ -2816,7 +2817,7 @@ CONTAINS
                 xxxr_urb2d,xxxb_urb2d,xxxg_urb2d,xxxc_urb2d,    & !H urban
                 trl_urb3d,tbl_urb3d,tgl_urb3d,                  & !H urban
                 sh_urb2d,lh_urb2d,g_urb2d,rn_urb2d,ts_urb2d,    & !H urban
-                ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, & ! danli 09/24/2023
+                ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D, AHOUT_URB2D, & ! danli 09/24/2023
                 psim_urb2d,psih_urb2d,u10_urb2d,v10_urb2d,      & !O urban
                 GZ1OZ0_urb2d, AKMS_URB2D,                       & !O urban
                 th2_urb2d,q2_urb2d,ust_urb2d,                   & !O urban
@@ -2966,6 +2967,9 @@ CONTAINS
 !m             AKHS(I,J) = AKHS_URB2D(I,J)                    !urban
              AKHS(I,J) = CHS(I,J)                             !urban
              AKMS(I,J) = AKMS_URB2D(I,J)                      !urban
+             IF (AHOUT_URB2D(I,J) > 0) THEN
+             HFX(I,J)  = HFX (I,J) + AHOUT_URB2D(I,J)         ! danli 01/02/2024 AHOUT_URB2D is non-zero with ahoption == 5
+             END IF
            END IF                                             !urban
          ENDDO                                                !urban
        ENDDO                                                  !urban
