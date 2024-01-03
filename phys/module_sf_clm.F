@@ -4296,7 +4296,7 @@ CONTAINS
      REAL :: CHS2_URB
      REAL :: UST_URB
 ! danli 09/24/2023
-     REAL :: ALPHAC, ALPHAR, ALPHAB, ALPHAG
+     REAL :: ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT
 
 ! ----------------------------------------------------------------------
 ! DECLARATIONS END - urban
@@ -5246,7 +5246,7 @@ CONTAINS
                        TGRL_URB,SMR_URB,CMGR_URB, CHGR_URB, jmonth,     & ! H
                        DRELR_URB,DRELB_URB,                             & ! H
                        DRELG_URB,FLXHUMR_URB,FLXHUMB_URB,FLXHUMG_URB,   &
-                       ALPHAC, ALPHAR, ALPHAB, ALPHAG)          ! danli 09/24/2023
+                       ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT)          ! danli 09/24/2023
 
             TS_URB2D(I,J) = TS_URB
 
@@ -5267,6 +5267,7 @@ CONTAINS
            ! ALPHAB_URB2D(I,J) = ALPHAB
            ! ALPHAG_URB2D(I,J) = ALPHAG
            ! TA_URB2D(I,J)     = TA_URB
+           ! AHOUT_URB2D(I,J)  = AHOUT
 
             TR_URB2D(I,J) = TR_URB
             TB_URB2D(I,J) = TB_URB
