@@ -546,7 +546,7 @@ CONTAINS
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAB_URB2D
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: ALPHAG_URB2D
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT) :: TA_URB2D
-     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT) :: AHOUT_URB2D
+     REAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT) :: AHOUT_URB2D
 
 ! output variable lsm --> surface_driver
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(OUT) :: PSIM_URB2D
@@ -2934,7 +2934,7 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
    REAL :: CMR_URB, CHR_URB, CMC_URB, CHC_URB, CMGR_URB, CHGR_URB
    REAL :: frc_urb,lb_urb
    REAL :: check
-   REAL :: ALPHAC, ALPHAR, ALPHAB, ALPHAG   ! danli 09/24/2023
+   REAL :: ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT   ! danli 09/24/2023
 ! ----------------------------------------------------------------------
 ! DECLARATIONS END - urban
 ! ----------------------------------------------------------------------
@@ -3848,6 +3848,7 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
            ! ALPHAB_URB2D(I,J) = ALPHAB
            ! ALPHAG_URB2D(I,J) = ALPHAG
            ! TA_URB2D(I,J)     = TA_URB
+           ! AHOUT_URB2D(I,J)     = AHOUT
 
                   TR_URB2D(I,J) = TR_URB
                   TB_URB2D(I,J) = TB_URB
@@ -4642,7 +4643,7 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
                              TGRL_URB,SMR_URB,CMGR_URB,CHGR_URB,jmonth,       & ! H
                              DRELR_URB,DRELB_URB,                             & ! H
                              DRELG_URB,FLXHUMR_URB,FLXHUMB_URB,FLXHUMG_URB,   &
-                             ALPHAC, ALPHAR, ALPHAB, ALPHAG)                    ! danli 09/24/2023
+                             ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT)                    ! danli 09/24/2023
 
 #if 0
                 IF(IPRINT) THEN
@@ -4709,6 +4710,7 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
            ! ALPHAB_URB2D(I,J) = ALPHAB
            ! ALPHAG_URB2D(I,J) = ALPHAG
            ! TA_URB2D(I,J)     = TA_URB
+           ! AHOUT_URB2D(I,J)     = AHOUT
 
                   TR_URB2D(I,J) = TR_URB
                   TB_URB2D(I,J) = TB_URB
