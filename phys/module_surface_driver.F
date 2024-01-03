@@ -1255,7 +1255,7 @@ CONTAINS
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT):: TS_URB2D !urban
 
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  ::  ALPHAC_URB2D, ALPHAR_URB2D, ALPHAB_URB2D, ALPHAG_URB2D, TA_URB2D ! danli 09/24/2023
-     REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme )  ::  AHOUT_URB2D ! danli 01/02/2024, local variable
+     REAL, DIMENSION( ims:ime, jms:jme )  ::  AHOUT_URB2D ! danli 01/02/2024, urban local var
 
      REAL, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  :: FRC_URB2D  !urban
      INTEGER, OPTIONAL, DIMENSION( ims:ime, jms:jme ), INTENT(INOUT)  :: UTYPE_URB2D  !urban
