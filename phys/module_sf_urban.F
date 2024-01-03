@@ -1528,16 +1528,16 @@ ELSE    ! for ROOF_TO_CANOPY_AIR_OPTION   ! danli 10/12/2023   This implicitly u
 
       IF (CH_SCHEME == 100) THEN  ! danli 01/02/2024
 
-      !write(mesg,*) 'CH_SCHEME 100 yes or no? ',CH_SCHEME
-      !WRITE_MESSAGE(mesg)
+      write(mesg,*) 'CH_SCHEME 100 yes or no',CH_SCHEME
+      WRITE_MESSAGE(mesg)
 
       CALL SFCDIF_URB_DL(ZA,Z0C,T1VC,TH2V,UA,AKANDA_URBAN,CMC_URB,CHC_URB,RLMO_URB,CDC)
       ALPHAC =  RHO*CP*CHC_URB 
 
       ELSE
 
-      !write(mesg,*) 'CH_SCHEME 100 yes or no? ',CH_SCHEME
-      !WRITE_MESSAGE(mesg)
+      write(mesg,*) 'CH_SCHEME 100 yes or no',CH_SCHEME
+      WRITE_MESSAGE(mesg)
 
       CALL SFCDIF_URB(ZA,Z0C,T1VC,TH2V,UA,AKANDA_URBAN,CMC_URB,CHC_URB,RLMO_URB,CDC)
       ALPHAC =  RHO*CP*CHC_URB
