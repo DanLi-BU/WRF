@@ -2968,7 +2968,7 @@ CONTAINS
              AKHS(I,J) = CHS(I,J)                             !urban
              AKMS(I,J) = AKMS_URB2D(I,J)                      !urban
              IF (AHOUT_URB2D(I,J) > 0) THEN
-             HFX(I,J)  = HFX (I,J) + AHOUT_URB2D(I,J)         ! danli 01/02/2024 AHOUT_URB2D is non-zero with ahoption == 5
+             HFX(I,J)  = HFX (I,J) + AHOUT_URB2D(I,J) * FRC_URB2D(I,J)        ! danli 01/02/2024 AHOUT_URB2D is non-zero with ahoption == 5
              END IF
            END IF                                             !urban
          ENDDO                                                !urban
