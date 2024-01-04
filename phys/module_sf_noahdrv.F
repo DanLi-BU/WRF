@@ -3780,7 +3780,7 @@ SUBROUTINE lsm_mosaic(DZ8W,QV3D,P8W3D,T3D,TSK,                      &
                              TGRL_URB,SMR_URB,CMGR_URB,CHGR_URB,jmonth,       & ! H
                              DRELR_URB,DRELB_URB,                             & ! H
                              DRELG_URB,FLXHUMR_URB,FLXHUMB_URB,FLXHUMG_URB,   &
-                             ALPHAC, ALPHAR, ALPHAB, ALPHAG, AH_OUT)                    ! danli 09/24/2023
+                             ALPHAC, ALPHAR, ALPHAB, ALPHAG, AHOUT)                    ! danli 09/24/2023
 
 #if 0
                 IF(IPRINT) THEN
