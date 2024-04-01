@@ -137,8 +137,10 @@ ROOF_TO_CANOPY_AIR_OPTION: 0
 
 #
 # AHOPTION [ 0: No anthropogenic heating,  1: Anthropogenic heating will be added to sensible heat flux term,
-#            2: Anthropogenic heating (no diurnal profile) will be added to the canopy air budget, 3: Anthropogenic heating (no diurnal profile) will be added to the ground surface energy budget,
-#            4: similar to 1 but without diurnal profile  ]
+#            2: Anthropogenic heating (no diurnal profile) will be added to the canopy air budget, 
+#            3: Anthropogenic heating (no diurnal profile) will be added to the ground surface energy budget,
+#            4: similar to 1 but without diurnal profile, 
+#            5: similar to 4 but anthropogenic heating does not directly affect the TSK and T2 calculations       ]
 #      (sf_urban_physics=1)
 #
 
