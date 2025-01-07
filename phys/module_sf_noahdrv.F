@@ -1460,7 +1460,7 @@ CONTAINS
 ! Convert QSFC back to mixing ratio
             QSFC(I,J)= Q1/(1.0-Q1)
             UST(I,J)= FRC_URB2D(I,J)*UST_URB+(1-FRC_URB2D(I,J))*UST(I,J)      ![m/s]
-            ZNT(I,J)= EXP(FRC_URB2D(I,J)*ALOG(ZNT_URB)+(1-FRC_URB2D(I,J))* ALOG(Z0K))   ! danli 11/01/2023
+!            ZNT(I,J)= EXP(FRC_URB2D(I,J)*ALOG(ZNT_URB)+(1-FRC_URB2D(I,J))* ALOG(Z0K))   ! danli 11/01/2023
 
 #if 0
     IF(IPRINT)THEN
