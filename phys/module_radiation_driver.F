@@ -15,7 +15,7 @@ CONTAINS
               ,GMT    ,GSW    ,HBOT                                       &
               ,HTOP   ,HBOTR  ,HTOPR                                      &
               ,ICLOUD                                                     &
-              ,cldovrlp                                                   & 
+              ,cldovrlp                                                   &
               ,ITIMESTEP,JULDAY, JULIAN                                   &
               ,JULYR  ,LW_PHYSICS                                         &
               ,NCFRCV ,NCFRST ,NPHS                                       &
@@ -190,7 +190,7 @@ CONTAINS
                                        ,RRTMG_LWSCHEME_FAST, RRTMG_SWSCHEME_FAST  &
 #endif
 #if( BUILD_RRTMK == 1)
-                                       ,RRTMK_LWSCHEME, RRTMK_SWSCHEME  & 
+                                       ,RRTMK_LWSCHEME, RRTMK_SWSCHEME  &
 #endif
                                        ,SWRADSCHEME, GSFCSWSCHEME       &
                                        ,GFDLSWSCHEME, CAMLWSCHEME, CAMSWSCHEME &
@@ -241,10 +241,10 @@ CONTAINS
    USE module_ra_hwrf
 #endif
    USE module_ra_hs         , ONLY : hsrad
-   
+
    USE module_ra_goddard    , ONLY : goddardrad
    USE module_ra_flg        , ONLY : RAD_FLG
-   
+
    USE module_ra_aerosol    , ONLY : calc_aerosol_goddard_sw, &
                                      calc_aerosol_rrtmg_sw
    USE module_ra_farms      , ONLY : farms_driver
@@ -267,7 +267,7 @@ CONTAINS
 ! Radiation_driver is the WRF mediation layer routine that provides the interface to
 ! to radiation physics packages in the WRF model layer. The radiation
 ! physics packages to call are chosen by setting the namelist variable
-! (Rconfig entry in Registry) to the integer value assigned to the 
+! (Rconfig entry in Registry) to the integer value assigned to the
 ! particular package (package entry in Registry). For example, if the
 ! namelist variable ra_lw_physics is set to 1, this corresponds to the
 ! Registry Package entry for swradscheme.  Note that the Package
@@ -275,26 +275,26 @@ CONTAINS
 ! in the CASE statements in this routine.
 !
 ! Among the arguments is moist, a four-dimensional scalar array storing
-! a variable number of moisture tracers, depending on the physics 
+! a variable number of moisture tracers, depending on the physics
 ! configuration for the WRF run, as determined in the namelist.  The
 ! highest numbered index of active moisture tracers the integer argument
 ! n_moist (note: the number of tracers at run time is the quantity
 ! <tt>n_moist - PARAM_FIRST_SCALAR + 1</tt> , not n_moist. Individual tracers
 ! may be indexed from moist by the Registry name of the tracer prepended
-! with P_; for example P_QC is the index of cloud water. An index 
+! with P_; for example P_QC is the index of cloud water. An index
 ! represents a valid, active field only if the index is greater than
 ! or equal to PARAM_FIRST_SCALAR.  PARAM_FIRST_SCALAR and the individual
 ! indices for each tracer is defined in module_state_description and
 ! set in <a href=set_scalar_indices_from_config.html>set_scalar_indices_from_config</a> defined in frame/module_configure.F.
 !
-! Physics drivers in WRF 2.0 and higher, originally model-layer 
+! Physics drivers in WRF 2.0 and higher, originally model-layer
 ! routines, have been promoted to mediation layer routines and they
 ! contain OpenMP threaded loops over tiles.  Thus, physics drivers
 ! are called from single-threaded regions in the solver. The physics
 ! routines that are called from the physics drivers are model-layer
 ! routines and fully tile-callable and thread-safe.
 !</DESCRIPTION>
-! 
+!
 !======================================================================
 ! Grid structure in physics part of WRF
 !----------------------------------------------------------------------
@@ -324,11 +324,11 @@ CONTAINS
 !
 !======================================================================
 ! Grid structure in physics part of WRF
-! 
+!
 !-------------------------------------
-! The horizontal velocities used in the physics are unstaggered 
-! relative to temperature/moisture variables. All predicted 
-! variables are carried at half levels except w, which is at full 
+! The horizontal velocities used in the physics are unstaggered
+! relative to temperature/moisture variables. All predicted
+! variables are carried at half levels except w, which is at full
 ! levels. Some arrays with names (*8w) are at w (full) levels.
 !
 !==================================================================
@@ -346,11 +346,11 @@ CONTAINS
 !-- PM2_5_DRY     Dry PM2.5 aerosol mass for all species (ug m^-3)
 !-- PM2_5_WATER   PM2.5 water mass (ug m^-3)
 !-- PM2_5_DRY_EC  Dry PM2.5 elemental carbon aersol mass (ug m^-3)
-!-- RTHRATEN      Theta tendency 
+!-- RTHRATEN      Theta tendency
 !                 due to radiation (K/s)
-!-- RTHRATENLW    Theta tendency 
+!-- RTHRATENLW    Theta tendency
 !                 due to long wave radiation (K/s)
-!-- RTHRATENSW    Theta temperature tendency 
+!-- RTHRATENSW    Theta temperature tendency
 !                 due to short wave radiation (K/s)
 !-- dt            time step (s)
 !-- itimestep     number of time steps
@@ -385,9 +385,9 @@ CONTAINS
 !-- JULDAY        the initial day (Julian day)
 !-- RADT          time for calling radiation (min)
 !-- ra_call_offset -1 (old) means usually just before output, 0 after
-!-- DEGRAD        conversion factor for 
+!-- DEGRAD        conversion factor for
 !                 degrees to radians (pi/180.) (rad/deg)
-!-- DPD           degrees per day for earth's 
+!-- DPD           degrees per day for earth's
 !                 orbital position (deg/day)
 !-- R_d           gas constant for dry air (J/kg/K)
 !-- CP            heat capacity at constant pressure for dry air (J/kg/K)
@@ -458,7 +458,7 @@ CONTAINS
                                                             XICE, &
                                                              TSK, &
                                                           VEGFRA, &
-                                                            SNOW 
+                                                            SNOW
    REAL,  DIMENSION( ims:ime, levsiz, jms:jme, n_ozmixm ),  OPTIONAL,    &
           INTENT(IN   ) ::                                  OZMIXM
    REAL,  DIMENSION( ims:ime, alevsiz, jms:jme, no_src_types, n_ozmixm-1 ),  OPTIONAL,    &
@@ -513,7 +513,7 @@ CONTAINS
    INTEGER, OPTIONAL,                INTENT(IN) ::  shcu_physics
 
   REAL, DIMENSION( ims:ime, kms:kme, jms:jme ), OPTIONAL,        &
-        INTENT(IN)     ::                            EFCG,       & 
+        INTENT(IN)     ::                            EFCG,       &
                                                      EFCS,       &
                                                      EFIG,       &
                                                      EFIS,       &
@@ -540,9 +540,9 @@ CONTAINS
          INTENT(IN ) ::          qc_bl, qi_bl, qs_cu
 
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ), OPTIONAL ,       &
-         INTENT(IN ) ::  tauaerlw1,tauaerlw2,tauaerlw3,tauaerlw4, & ! czhao 
-                         tauaerlw5,tauaerlw6,tauaerlw7,tauaerlw8, & ! czhao 
-                         tauaerlw9,tauaerlw10,tauaerlw11,tauaerlw12, & ! czhao 
+         INTENT(IN ) ::  tauaerlw1,tauaerlw2,tauaerlw3,tauaerlw4, & ! czhao
+                         tauaerlw5,tauaerlw6,tauaerlw7,tauaerlw8, & ! czhao
+                         tauaerlw9,tauaerlw10,tauaerlw11,tauaerlw12, & ! czhao
                          tauaerlw13,tauaerlw14,tauaerlw15,tauaerlw16
 
    INTEGER, INTENT(IN) :: icloud_cu
@@ -693,7 +693,7 @@ CONTAINS
 
  real, dimension( ims:ime, jms:jme ), OPTIONAL, INTENT(OUT) :: &   !goddardrad
       aod2d_out    ,&  ! column aerosol optical depth
-      atop2d_out       ! aerosol top pressure [mb]  
+      atop2d_out       ! aerosol top pressure [mb]
 
 
  integer :: i24h
@@ -719,7 +719,7 @@ CONTAINS
 ! NUWRF JJS 20140225  vvvvv
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),               OPTIONAL ,&
       INTENT(INOUT)  :: re_cloud_gsfc, re_rain_gsfc, re_ice_gsfc,        &
-                        re_snow_gsfc, re_graupel_gsfc, re_hail_gsfc 
+                        re_snow_gsfc, re_graupel_gsfc, re_hail_gsfc
 ! NUWRF JJS 20140225  ^^^^^
 
   real, dimension( ims:ime, jms:jme, 1:4 )  :: sflxd    !NUWRF SW only for LIS
@@ -733,7 +733,7 @@ CONTAINS
 
  real, dimension( ims:ime, jms:jme ), OPTIONAL, INTENT(INOUT) :: &   !goddardrad
       cod2d_out    ,&  ! column optical depth
-      ctop2d_out       ! cloud top pressure [mb]  
+      ctop2d_out       ! cloud top pressure [mb]
 
 ! Added by ZCX for low and total cloud fraction
    REAL, DIMENSION( kms:kme ), OPTIONAL, INTENT(IN)   :: znu      ! eta values on half (mass)levels
@@ -750,14 +750,14 @@ CONTAINS
          INTENT(INOUT)  ::                                  emstot
 
 !
-! Optional 
+! Optional
 !
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                  &
          OPTIONAL,                                                &
          INTENT(INOUT) ::                                 CLDFRA, &
                                                           CCLDFRA,&
                                                           QCCONV, &
-                                                          QICONV   
+                                                          QICONV
 
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                  & ! ckay for sub-grid cloud fraction
          OPTIONAL,                                                &
@@ -892,7 +892,7 @@ CONTAINS
    CHARACTER(len=255) :: wrf_err_message
 #endif
 
-!---------- local test vars 
+!---------- local test vars
 !   real, dimension(ims:ime, kms:kme, jms:jme) ::  hlw, hsw
 
    ! This allows radiation schemes (mainly HWRF) to correctly
@@ -1531,7 +1531,7 @@ CONTAINS
            end do
 
            call gt_aod (p, DZ8W, t, qv, qnwfa, qnifa, taod5503d,        &
-                    ims,ime, jms,jme, kms,kme,its,ite, jts,jte, kts,kte) 
+                    ims,ime, jms,jme, kms,kme,its,ite, jts,jte, kts,kte)
 
            do j=jts,jte
               do i=its,ite
@@ -1697,7 +1697,7 @@ CONTAINS
              END IF
 
              CALL RRTMLWRAD(                                        &
-                  P_TOP=p_top_dummy                                 & 
+                  P_TOP=p_top_dummy                                 &
                  ,RTHRATEN=RTHRATEN,GLW=GLW,OLR=RLWTOA,EMISS=EMISS  &
                  ,QV3D=QV                                           &
                  ,QC3D=QC                                           &
@@ -1713,7 +1713,7 @@ CONTAINS
 !ccc Added for time-varying trace gases.
                  ,YR=YR,JULIAN=JULIAN                               &
 !ccc
-                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &     
+                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                                                                     )
@@ -1762,7 +1762,7 @@ CONTAINS
                     ,f_qi=f_qi,f_qs=f_qs,f_qg=f_qg ,f_qh=f_qh          &
                     ,rec3d=re_cloud_gsfc,rei3d=re_ice_gsfc             &
                     ,rer3d=re_rain_gsfc,res3d=re_snow_gsfc             & !optional
-                    ,reg3d=re_graupel_gsfc,reh3d=re_hail_gsfc          & !optional 
+                    ,reg3d=re_graupel_gsfc,reh3d=re_hail_gsfc          & !optional
                     ,erbe_out=erbe_out                                 &
                     ,itimestep=itimestep, dt_in = dt                   &
 #if (WRF_CHEM == 1)
@@ -1772,7 +1772,7 @@ CONTAINS
 #endif
                                                                        )
 
-                                                                       
+
         CASE (GFDLLWSCHEME)
 
              CALL wrf_debug (100, 'CALL gfdllw')
@@ -1802,7 +1802,7 @@ CONTAINS
                  ,RSWTOA=rswtoa,RLWTOA=rlwtoa,CZMEAN=czmean         &
                  ,THRATEN=rthraten,THRATENLW=rthratenlw             &
                  ,THRATENSW=rthratensw                              &
-                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &     
+                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                                                                     )
@@ -1889,7 +1889,7 @@ CONTAINS
                      SOLCON=SOLCON,RADT=RADT,DEGRAD=DEGRAD,n_cldadv=3  &
                    ,abstot_3d=abstot,absnxt_3d=absnxt,emstot_3d=emstot &
                    ,doabsems=doabsems                               &
-                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &     
+                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                  ,coszen=coszen                                     )
@@ -2100,7 +2100,7 @@ CONTAINS
               ,gmt=gmt, radt=radt, degrad=degrad      &
               ,dtcolumn=dt                            &
               ,ids=ids,ide=ide,jds=jds,jde=jde        &
-              ,kds=kds,kde=kde                        &     
+              ,kds=kds,kde=kde                        &
               ,ims=ims,idim=ime,jms=jms,jdim=jme      &
               ,kms=kms,kmax=kme                       &
               ,its=its,ite=ite,jts=jts,jte=jte        &
@@ -2113,14 +2113,14 @@ CONTAINS
               )
 
           CALL wrf_debug(100, 'a4 Fu_Liou-Gu')
-! -- end 
+! -- end
 
         CASE DEFAULT
-  
+
              WRITE( wrf_err_message , * ) 'The longwave option does not exist: lw_physics = ', lw_physics
              CALL wrf_error_fatal ( wrf_err_message )
-           
-     END SELECT lwrad_select    
+
+     END SELECT lwrad_select
 
      IF (lw_physics .gt. 0 .and. .not.gfdl_lw .and. .not.flg_lw) THEN
         DO j=jts,jte
@@ -2144,10 +2144,10 @@ CONTAINS
            slwdn(i,j) = erbe_out(i,j,3)    ! surface LW downwelling flux [W/m2]
            slwup(i,j) = erbe_out(i,j,4)    ! surface LW upwelling flux [W/m2]
            olr(i,j)   = -erbe_out(i,j,2)
-        ENDDO    
-        ENDDO    
+        ENDDO
+        ENDDO
           ENDIF
-     ENDIF       
+     ENDIF
 !NUWRF JJS 20090623 ^^^^^
 
      IF ( PRESENT( AOD5502D ) ) THEN
@@ -2226,7 +2226,7 @@ CONTAINS
                     ,XTIME=xtime,DECLIN=declin,SOLCON=solcon           &
                     ,RADFRQ=radt,ICLOUD=icloud,DEGRAD=degrad           &
                     ,warm_rain=warm_rain                               &
-                    ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &     
+                    ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
                     ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                     ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                     ,QV3D=qv                                           &
@@ -2262,7 +2262,7 @@ CONTAINS
                     ,WAER600=waer600,WAER999=waer999                   & ! jcb
                     ,aer_ra_feedback=aer_ra_feedback                   &
 #endif
-                    ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &     
+                    ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
                     ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                     ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                     ,QV3D=qv                                           &
@@ -2320,11 +2320,11 @@ CONTAINS
                     ,f_qi=f_qi,f_qs=f_qs,f_qg=f_qg ,f_qh=f_qh          & !optional
                     ,rec3d=re_cloud_gsfc,rei3d=re_ice_gsfc             & !optional
                     ,rer3d=re_rain_gsfc,res3d=re_snow_gsfc             & !optional
-                    ,reg3d=re_graupel_gsfc,reh3d=re_hail_gsfc          & !optional 
+                    ,reg3d=re_graupel_gsfc,reh3d=re_hail_gsfc          & !optional
                     ,erbe_out=erbe_out                                 &
                     ,cod2d_out=cod2d_out,ctop2d_out=ctop2d_out         & !optional
                     ,sflxd=sflxd                                       & !optional
-                    ,swddir=swddir,swddni=swddni,swddif=swddif         & !optional 
+                    ,swddir=swddir,swddni=swddni,swddif=swddif         & !optional
                     ,coszen=coszen                                     & !optional
                     ,itimestep=itimestep, dt_in = dt                   &
 #if (WRF_CHEM == 1)
@@ -2389,7 +2389,7 @@ CONTAINS
                      SOLCON=SOLCON,RADT=RADT,DEGRAD=DEGRAD,n_cldadv=3  &
                    ,abstot_3d=abstot,absnxt_3d=absnxt,emstot_3d=emstot &
                    ,doabsems=doabsems                               &
-                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &     
+                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                  ,coszen=coszen                                     )
@@ -2480,7 +2480,7 @@ CONTAINS
 
 #if( BUILD_RRTMK == 1)
         CASE (RRTMK_SWSCHEME)
-  
+
              DO j=jts,jte
              DO k=kts,kte
              DO i=its,ite
@@ -2591,7 +2591,7 @@ CONTAINS
                  ,RSWTOA=rswtoa,RLWTOA=rlwtoa,CZMEAN=czmean         &
                  ,THRATEN=rthraten,THRATENLW=rthratenlw             &
                  ,THRATENSW=rthratensw                              &
-                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &     
+                 ,IDS=ids,IDE=ide, JDS=jds,JDE=jde, KDS=kds,KDE=kde &
                  ,IMS=ims,IME=ime, JMS=jms,JME=jme, KMS=kms,KME=kme &
                  ,ITS=its,ITE=ite, JTS=jts,JTE=jte, KTS=kts,KTE=kte &
                                                                     )
@@ -2641,14 +2641,14 @@ CONTAINS
         CASE (FLGSWSCHEME)
           flg_sw = .true.
 !--- No need to do anything since the short and long wave is calculted in one program
-! -- end 
+! -- end
 
         CASE DEFAULT
 
              WRITE( wrf_err_message , * ) 'The shortwave option does not exist: sw_physics = ', sw_physics
              CALL wrf_error_fatal ( wrf_err_message )
 
-     END SELECT swrad_select    
+     END SELECT swrad_select
 
 !NUWRF JJS 20090623  vvvvv
      IF (sw_physics .eq. goddardswscheme) THEN
@@ -2716,7 +2716,7 @@ CONTAINS
         ENDDO
      ENDIF
 
-     IF ( PRESENT( diffuse_frac ) ) THEN 
+     IF ( PRESENT( diffuse_frac ) ) THEN
          DO j=jts,jte
          DO i=its,ite
            if (swdown(i,j).gt.0.001) then
@@ -2778,7 +2778,7 @@ CONTAINS
      present(swddnic2 ) ) then
     if (swint_opt == 2) then
        call wrf_debug(100,'SW surface irradiance calculated with FARMS')
-   
+
        if (aer_opt == 1) then
          DO j=jts,jte
            DO i=its,ite
@@ -2786,7 +2786,7 @@ CONTAINS
            ENDDO
          ENDDO
        end if
-   
+
        !---------------
        !$OMP PARALLEL DO   &
        !$OMP PRIVATE ( ij ,i,j,k,its,ite,jts,jte)
@@ -2874,7 +2874,7 @@ CONTAINS
 
      accumulate_lw_select: SELECT CASE(lw_physics)
 
-     CASE (CAMLWSCHEME,& 
+     CASE (CAMLWSCHEME,&
            RRTMG_LWSCHEME &
 #if( BUILD_RRTMG_FAST == 1)
            ,RRTMG_LWSCHEME_FAST &
@@ -3090,15 +3090,15 @@ CONTAINS
 # endif
 
 ! Topographic shading
-   
+
    if ((topo_shading.eq.1).and.(itimestep .eq. 1 .or. &
         mod(itimestep,STEPRA) .eq. 1 + ra_call_offset))  then
 
 !---------------
 ! Calculate constants for short wave radiation
-   
+
    CALL radconst(XTIME,DECLIN,SOLCON,JULIAN,DEGRAD,DPD)
-   
+
 ! Make a local copy of terrain height field
      do j=jms,jme
      do i=ims,ime
@@ -3193,7 +3193,7 @@ CONTAINS
                                      DECDEG,DJUL,RJUL,ECCFAC
 !
 ! !DESCRIPTION:
-! Compute terms used in radiation physics 
+! Compute terms used in radiation physics
 !EOP
 
 ! for short wave radiation
@@ -3202,12 +3202,12 @@ CONTAINS
    SOLCON=0.
 
 !-----OBECL : OBLIQUITY = 23.5 DEGREE.
-        
+
    OBECL=23.5*DEGRAD
    SINOB=SIN(OBECL)
-        
+
 !-----CALCULATE LONGITUDE OF THE SUN FROM VERNAL EQUINOX:
-        
+
    IF(JULIAN.GE.80.)SXLONG=DPD*(JULIAN-80.)
    IF(JULIAN.LT.80.)SXLONG=DPD*(JULIAN+285.)
    SXLONG=SXLONG*DEGRAD
@@ -3215,12 +3215,17 @@ CONTAINS
    DECLIN=ASIN(ARG)
    DECDEG=DECLIN/DEGRAD
 !----SOLAR CONSTANT ECCENTRICITY FACTOR (PALTRIDGE AND PLATT 1976)
-   DJUL=JULIAN*360./365.
+
+   DJUL=(JULIAN)*360./365.
+   DJUL=(165.0 + MOD(REAL(JULIAN)-1.0, 1.0))*360./365.
    RJUL=DJUL*DEGRAD
    ECCFAC=1.000110+0.034221*COS(RJUL)+0.001280*SIN(RJUL)+0.000719*  &
           COS(2*RJUL)+0.000077*SIN(2*RJUL)
    SOLCON=1370.*ECCFAC
-   
+   !print *,'pre_JULIAN = ', JULIAN, 'JULIAN = ', 165.0 + MOD(REAL(JULIAN)-1.0, 1.0)
+   !print *,'pre_DJUL = ', (JULIAN)*360./365., 'DJUL = ', (165.0 + MOD(REAL(JULIAN)-1.0, 1.0))*360./365.
+
+
    END SUBROUTINE radconst
 
 
@@ -3238,9 +3243,12 @@ CONTAINS
        real    :: da,eot,xt24,tloctm,xxlat
 
        da=6.2831853071795862*(julian-1)/365.
+       da=6.2831853071795862*((165.0 + MOD(REAL(julian)-1.0, 1.0))-1)/365.
        eot=(0.000075+0.001868*cos(da)-0.032077*sin(da) &
             -0.014615*cos(2*da)-0.04089*sin(2*da))*(229.18)
        xt24=mod(xtime,1440.)+eot
+       !print *,'pre_julian = ', julian, 'julian = ', 165.0 + MOD(REAL(julian)-1.0, 1.0)
+       !print *,'pre_da = ', 6.2831853071795862*(julian-1)/365., 'da = ', 6.2831853071795862*((165.0 + MOD(REAL(julian)-1.0, 1.0))-1)/365.
        do j=jts,jte
           do i=its,ite
              tloctm=gmt+xt24/60.+xlon(i,j)/15.
@@ -3390,7 +3398,7 @@ CONTAINS
           ids,ide, jds,jde, kds,kde,                                 &
           ims,ime, jms,jme, kms,kme,                                 &
           its,ite, jts,jte, kts,kte                                  )
-     USE module_state_description, ONLY : KFCUPSCHEME, KFETASCHEME       !CuP, wig 5-Oct-2006  !BSINGH - For WRFCuP scheme 
+     USE module_state_description, ONLY : KFCUPSCHEME, KFETASCHEME       !CuP, wig 5-Oct-2006  !BSINGH - For WRFCuP scheme
 !---------------------------------------------------------------------
    IMPLICIT NONE
 !---------------------------------------------------------------------
@@ -3481,7 +3489,7 @@ CONTAINS
      USE module_state_description, ONLY : KFCUPSCHEME, KFETASCHEME       !wig, CuP 4-Fb-2008 !BSINGH - For WRFCuP scheme
 
 #if (HWRF == 1)
-   USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF 
+   USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT, ETAMP_HWRF
 #else
    USE module_state_description, ONLY : FER_MP_HIRES, FER_MP_HIRES_ADVECT
 #endif
@@ -3536,13 +3544,13 @@ CONTAINS
 ! if provided.
 !
 ! Whether QI or QC is active or not is determined from the indices of
-! the fields into the 4D scalar arrays in WRF. These indices are 
+! the fields into the 4D scalar arrays in WRF. These indices are
 ! P_QI and P_QC, respectively, and they are passed in to the routine
 ! to enable testing to see if QI and QC represent active fields in
 ! the moisture 4D scalar array carried by WRF.
-! 
+!
 ! If a field is active its index will have a value greater than or
-! equal to PARAM_FIRST_SCALAR, which is also an input argument to 
+! equal to PARAM_FIRST_SCALAR, which is also an input argument to
 ! this routine.
 !EOP
 
@@ -3701,8 +3709,8 @@ CONTAINS
 !!              ARG=MAX(ARG, ARGMIN)
 !!              CLDFRA(i,k,j)=(RHUM/RHGRID)*(1.-EXP(ARG))
         IF (CLDFRA(i,k,j) .LT. .01) CLDFRA(i,k,j)=0.
-           
-     ENDIF          !--- End IF (QCLD .LT. QCLDMIN) ...     
+
+     ENDIF          !--- End IF (QCLD .LT. QCLDMIN) ...
     ENDDO          !--- End DO i
     ENDDO          !--- End DO k
     ENDDO          !--- End DO j
@@ -3913,7 +3921,7 @@ CONTAINS
 !.. wish to put fake clouds into the stratosphere.  The 10/1500 ratio
 !.. d(Theta)/d(Z) approximates a vertical line on typical SkewT chart
 !.. near typical (mid-latitude) tropopause height.  Since messy data
-!.. could give us a false signal of such a transition, do the check over 
+!.. could give us a false signal of such a transition, do the check over
 !.. three K-level change, not just a level-to-level check.  This method
 !.. has potential failure in arctic-like conditions with extremely low
 !.. tropopause height, as would any other diagnostic, so ensure resulting
@@ -3965,10 +3973,10 @@ CONTAINS
 
 
 !..Starting below tropo height, if cloud fraction greater than 1 percent,
-!.. compute an approximate total layer depth of cloud, determine a total 
-!.. liquid water/ice path (LWP/IWP), then reduce that amount with tuning 
+!.. compute an approximate total layer depth of cloud, determine a total
+!.. liquid water/ice path (LWP/IWP), then reduce that amount with tuning
 !.. parameter to represent entrainment factor, then divide up LWP/IWP
-!.. into delta-Z weighted amounts for individual levels per cloud layer. 
+!.. into delta-Z weighted amounts for individual levels per cloud layer.
 
       k_cldb = k_tropo
       in_cloud = .false.
@@ -4178,7 +4186,7 @@ CONTAINS
 !+---+-----------------------------------------------------------------+
 
    SUBROUTINE toposhad_init(ht_shad,ht_loc,shadowmask,nested,iter,   &
-                       ids,ide, jds,jde, kds,kde,                    & 
+                       ids,ide, jds,jde, kds,kde,                    &
                        ims,ime, jms,jme, kms,kme,                    &
                        ips,ipe, jps,jpe, kps,kpe,                    &
                        its,ite, jts,jte, kts,kte                     )
@@ -4212,7 +4220,7 @@ CONTAINS
    ENDDO
    ENDDO
 
-! Initialize shading height 
+! Initialize shading height
 
    IF ( nested ) THEN  ! Do not overwrite input from parent domain
      do j=max(jts,jds+2),min(jte,jde-3)
@@ -4316,7 +4324,7 @@ CONTAINS
    SUBROUTINE toposhad(xlat,xlong,sina,cosa,xtime,gmt,radfrq,declin, &
                        dx,dy,ht_shad,ht_loc,iter,                    &
                        shadowmask,shadlen,                    &
-                       ids,ide, jds,jde, kds,kde,                    & 
+                       ids,ide, jds,jde, kds,kde,                    &
                        ims,ime, jms,jme, kms,kme,                    &
                        ips,ipe, jps,jpe, kps,kpe,                    &
                        its,ite, jts,jte, kts,kte                     )
@@ -4352,7 +4360,7 @@ CONTAINS
  pi = 4.*atan(1.)
  gpshad = int(shadlen/dx+1.)
 
- if (iter.eq.1) then  
+ if (iter.eq.1) then
 
 
    j_loop1: DO J=jts,jte
@@ -4376,9 +4384,9 @@ CONTAINS
      if (argu.lt.-1) argu = -1
      sol_azi = sign(acos(argu),sin(HRANG))+pi  ! azimuth angle of the sun
      if (cosa(i,j).ge.0) then
-       sol_azi = sol_azi + asin(sina(i,j))  ! rotation towards WRF grid 
+       sol_azi = sol_azi + asin(sina(i,j))  ! rotation towards WRF grid
      else
-       sol_azi = sol_azi + pi - asin(sina(i,j)) 
+       sol_azi = sol_azi + pi - asin(sina(i,j))
      endif
 
 ! Scan for higher surrounding topography
@@ -4387,7 +4395,7 @@ CONTAINS
 
             do jj = j+1,j+gpshad
               ri = i + (jj-j)*tan(sol_azi)
-              i1 = int(ri) 
+              i1 = int(ri)
               i2 = i1+1
               wgt = ri-i1
               dxabs = sqrt((dy*(jj-j))**2+(dx*(ri-i))**2)
@@ -4488,9 +4496,9 @@ CONTAINS
        if (argu.lt.-1) argu = -1
        sol_azi = sign(acos(argu),sin(HRANG))+pi  ! azimuth angle of the sun
        if (cosa(i,j).ge.0) then
-         sol_azi = sol_azi + asin(sina(i,j))  ! rotation towards WRF grid 
+         sol_azi = sol_azi + asin(sina(i,j))  ! rotation towards WRF grid
        else
-         sol_azi = sol_azi + pi - asin(sina(i,j)) 
+         sol_azi = sol_azi + pi - asin(sina(i,j))
        endif
 
 ! Scan for higher surrounding topography
@@ -4499,7 +4507,7 @@ CONTAINS
 
             do jj = j+1,j+gpshad
               ri = i + (jj-j)*tan(sol_azi)
-              i1 = int(ri) 
+              i1 = int(ri)
               i2 = i1+1
               wgt = ri-i1
               dxabs = sqrt((dy*(jj-j))**2+(dx*(ri-i))**2)
@@ -4947,7 +4955,7 @@ SUBROUTINE aer_p_int(p ,pin, levsiz, aerodt, aerod, no_src, pf, totaod,   &
                                        its,ite, jts,jte, kts,kte
 
    integer, intent(in) :: levsiz              ! number of aerosol layers
-   integer, intent(in) :: no_src              ! types of aerosol 
+   integer, intent(in) :: no_src              ! types of aerosol
 
    real, intent(in) :: p(ims:ime,kms:kme,jms:jme)
    real, intent(in) :: pf(ims:ime,kms:kme,jms:jme)
@@ -4982,7 +4990,7 @@ SUBROUTINE aer_p_int(p ,pin, levsiz, aerodt, aerod, no_src, pf, totaod,   &
       kupper(i) = 1
    end do
 !
-! The pressure from incoming data is in hPa and top-down, 
+! The pressure from incoming data is in hPa and top-down,
 !     while model pressure is in Pa and bottom-up
 !
       do k = kts,kte
@@ -5099,8 +5107,8 @@ END SUBROUTINE aer_p_int
      &                                            t_phy,p_phy, DZ8W,    &
      &                                            qvapor, nifa, nwfa
       REAL,DIMENSION(ims:ime,kms:kme,jms:jme),INTENT(INOUT):: taod5503d
-                                                              
-      !..Local variables. 
+
+      !..Local variables.
 
       REAL, DIMENSION(its:ite,kts:kte,jts:jte):: AOD_wfa, AOD_ifa
       REAL:: RH, a_RH,b_RH, rh_d,rh_f, rhoa,qvsat, unit_bext1,unit_bext3
@@ -5111,77 +5119,77 @@ END SUBROUTINE aer_p_int
      &                      (/10., 60., 70., 80., 85., 90., 95., 99.8/)
       REAL, DIMENSION(rind,4,2) :: lookup_tabl                           ! RH, temp, water-friendly, ice-friendly
 
-      lookup_tabl(1,1,1) =  5.73936E-15  
+      lookup_tabl(1,1,1) =  5.73936E-15
       lookup_tabl(1,1,2) =  2.63577E-12
-      lookup_tabl(1,2,1) =  5.73936E-15  
+      lookup_tabl(1,2,1) =  5.73936E-15
       lookup_tabl(1,2,2) =  2.63577E-12
-      lookup_tabl(1,3,1) =  5.73936E-15  
+      lookup_tabl(1,3,1) =  5.73936E-15
       lookup_tabl(1,3,2) =  2.63577E-12
-      lookup_tabl(1,4,1) =  5.73936E-15  
+      lookup_tabl(1,4,1) =  5.73936E-15
       lookup_tabl(1,4,2) =  2.63577E-12
 
-      lookup_tabl(2,1,1) = 6.93515E-15  
+      lookup_tabl(2,1,1) = 6.93515E-15
       lookup_tabl(2,1,2) = 2.72095E-12
-      lookup_tabl(2,2,1) = 6.93168E-15  
-      lookup_tabl(2,2,2) = 2.72092E-12  
-      lookup_tabl(2,3,1) = 6.92570E-15  
-      lookup_tabl(2,3,2) = 2.72091E-12 
-      lookup_tabl(2,4,1) = 6.91833E-15  
+      lookup_tabl(2,2,1) = 6.93168E-15
+      lookup_tabl(2,2,2) = 2.72092E-12
+      lookup_tabl(2,3,1) = 6.92570E-15
+      lookup_tabl(2,3,2) = 2.72091E-12
+      lookup_tabl(2,4,1) = 6.91833E-15
       lookup_tabl(2,4,2) = 2.72087E-12
 
-      lookup_tabl(3,1,1) = 7.24707E-15  
+      lookup_tabl(3,1,1) = 7.24707E-15
       lookup_tabl(3,1,2) = 2.77219E-12
-      lookup_tabl(3,2,1) = 7.23809E-15  
+      lookup_tabl(3,2,1) = 7.23809E-15
       lookup_tabl(3,2,2) = 2.77222E-12
-      lookup_tabl(3,3,1) = 7.23108E-15  
+      lookup_tabl(3,3,1) = 7.23108E-15
       lookup_tabl(3,3,2) = 2.77201E-12
-      lookup_tabl(3,4,1) = 7.21800E-15  
+      lookup_tabl(3,4,1) = 7.21800E-15
       lookup_tabl(3,4,2) = 2.77111E-12
 
-      lookup_tabl(4,1,1) = 8.95130E-15  
+      lookup_tabl(4,1,1) = 8.95130E-15
       lookup_tabl(4,1,2) = 2.87263E-12
-      lookup_tabl(4,2,1) = 9.01582E-15  
+      lookup_tabl(4,2,1) = 9.01582E-15
       lookup_tabl(4,2,2) = 2.87252E-12
-      lookup_tabl(4,3,1) = 9.13216E-15  
+      lookup_tabl(4,3,1) = 9.13216E-15
       lookup_tabl(4,3,2) = 2.87241E-12
-      lookup_tabl(4,4,1) = 9.16219E-15  
+      lookup_tabl(4,4,1) = 9.16219E-15
       lookup_tabl(4,4,2) = 2.87211E-12
 
-      lookup_tabl(5,1,1) = 1.06695E-14  
+      lookup_tabl(5,1,1) = 1.06695E-14
       lookup_tabl(5,1,2) = 2.96752E-12
-      lookup_tabl(5,2,1) = 1.06370E-14  
+      lookup_tabl(5,2,1) = 1.06370E-14
       lookup_tabl(5,2,2) = 2.96726E-12
-      lookup_tabl(5,3,1) = 1.05999E-14  
+      lookup_tabl(5,3,1) = 1.05999E-14
       lookup_tabl(5,3,2) = 2.96702E-12
-      lookup_tabl(5,4,1) = 1.05443E-14  
+      lookup_tabl(5,4,1) = 1.05443E-14
       lookup_tabl(5,4,2) = 2.96603E-12
 
-      lookup_tabl(6,1,1) = 1.37908E-14  
+      lookup_tabl(6,1,1) = 1.37908E-14
       lookup_tabl(6,1,2) = 3.15081E-12
-      lookup_tabl(6,2,1) = 1.37172E-14  
+      lookup_tabl(6,2,1) = 1.37172E-14
       lookup_tabl(6,2,2) = 3.15020E-12
-      lookup_tabl(6,3,1) = 1.36362E-14  
+      lookup_tabl(6,3,1) = 1.36362E-14
       lookup_tabl(6,3,2) = 3.14927E-12
-      lookup_tabl(6,4,1) = 1.35287E-14  
+      lookup_tabl(6,4,1) = 1.35287E-14
       lookup_tabl(6,4,2) = 3.14817E-12
 
-      lookup_tabl(7,1,1) = 2.26019E-14  
+      lookup_tabl(7,1,1) = 2.26019E-14
       lookup_tabl(7,1,2) = 3.66798E-12
-      lookup_tabl(7,2,1) = 2.24435E-14  
+      lookup_tabl(7,2,1) = 2.24435E-14
       lookup_tabl(7,2,2) = 3.66540E-12
-      lookup_tabl(7,3,1) = 2.23254E-14  
+      lookup_tabl(7,3,1) = 2.23254E-14
       lookup_tabl(7,3,2) = 3.66173E-12
-      lookup_tabl(7,4,1) = 2.20496E-14  
+      lookup_tabl(7,4,1) = 2.20496E-14
       lookup_tabl(7,4,2) = 3.65796E-12
 
-      lookup_tabl(8,1,1) = 4.41983E-13  
+      lookup_tabl(8,1,1) = 4.41983E-13
       lookup_tabl(8,1,2) = 7.50091E-11
-      lookup_tabl(8,2,1) = 3.93335E-13  
+      lookup_tabl(8,2,1) = 3.93335E-13
       lookup_tabl(8,2,2) = 6.79097E-11
-      lookup_tabl(8,3,1) = 3.45569E-13  
+      lookup_tabl(8,3,1) = 3.45569E-13
       lookup_tabl(8,3,2) = 6.07845E-11
-      lookup_tabl(8,4,1) = 2.96971E-13  
-      lookup_tabl(8,4,2) = 5.36085E-11     
+      lookup_tabl(8,4,1) = 2.96971E-13
+      lookup_tabl(8,4,2) = 5.36085E-11
 
       DO j=jts,jte
          DO k=kts,kte
@@ -5246,7 +5254,7 @@ END SUBROUTINE aer_p_int
      &                        /(rh_arr(rh_idx2)/(100-rh_arr(rh_idx2))   &
      &                        -rh_arr(rh_idx1)/(100-rh_arr(rh_idx1))) ))
 
-      
+
                unit_bext1 = lookup_tabl(RH_idx1,t_idx,1)                &
      &                    + (lookup_tabl(RH_idx2,t_idx,1)               &
      &                    - lookup_tabl(RH_idx1,t_idx,1))*rh_f

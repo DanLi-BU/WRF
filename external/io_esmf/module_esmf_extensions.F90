@@ -481,8 +481,7 @@ CONTAINS
             ENDIF
             dayOfYear_r8 = rsec / REAL( SECONDS_PER_DAY, ESMF_KIND_R8 )
             ! start at 1
-            ! dayOfYear_r8 = dayOfYear_r8 + 1.0_ESMF_KIND_R8
-            dayOfYear_r8 = 165.0_ESMF_KIND_R8 + MOD(dayOfYear_r8, 1.0_ESMF_KIND_R8)
+            dayOfYear_r8 = dayOfYear_r8 + 1.0_ESMF_KIND_R8
           ENDIF
         ENDIF
       ENDIF
